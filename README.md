@@ -10,6 +10,8 @@ Aplicativo Python em background que monitora a pasta Downloads do Windows, detec
 - Edição de mapeamento extensão → categoria
 - Edição de mapeamento categoria → pasta
 - Seleção da pasta monitorada
+- **Delay configurável** antes de mover arquivos (padrão: 30 minutos)
+- **Botão "Mover Agora"** para mover arquivos pendentes imediatamente
 - **Notificações toast** ao organizar arquivos (opcional)
 - Bandeja do sistema com controles de pausar/retomar e configurações
 - Tratamento de downloads incompletos (`.crdownload`, `.part`, `.tmp`, `.download`)
@@ -60,6 +62,10 @@ Selecione a pasta que deseja monitorar para novos downloads:
 - Botão "..." para selecionar pasta via file dialog
 - Por padrão, monitora `%USERPROFILE%\Downloads`
 - Checkbox para habilitar/desabilitar notificações toast ao organizar arquivos
+- Campo para configurar o delay antes de mover arquivos (em minutos)
+  - Por padrão: 30 minutos
+  - Configure para 0 para mover imediatamente
+  - Cada arquivo tem seu próprio timer individual
 
 ### Aba Extensões
 
@@ -95,6 +101,7 @@ As configurações são salvas em `config.json` na raiz do projeto. Você pode e
 
 - **Status**: Exibe "Monitorando" ou "Pausado"
 - **Pausar/Retomar**: Alterna o monitoramento da pasta
+- **Mover Agora**: Move todos os arquivos pendentes imediatamente (ignora o delay)
 - **Configurações**: Abre a interface gráfica de configuração
 - **Sair**: Encerra o aplicativo
 
@@ -105,8 +112,10 @@ As configurações são salvas em `config.json` na raiz do projeto. Você pode e
 - Tratamento de arquivos bloqueados por outros processos (até 15 tentativas com 2s de intervalo)
 - Monitora apenas novos arquivos (eventos `on_created` e `on_moved`)
 - Configurações persistem em JSON para fácil edição manual
-- Notificações toast usam win10toast para Windows 10/11
-- Clicar na notificação abre a pasta de destino do arquivo
+- Notificações toast usam desktop-notifier para Windows 10/11
+- Notificações informam o destino do arquivo organizado
+- Delay configurável por arquivo para permitir acesso via navegador antes de mover
+- Cada arquivo tem seu próprio timer individual para evitar sobrecarga
 
 ## Estrutura do Projeto
 
