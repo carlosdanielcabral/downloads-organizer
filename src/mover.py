@@ -7,7 +7,10 @@ logger = logging.getLogger(__name__)
 
 
 def organize_download(source: Path, dest_folder: Path) -> Path | None:
+    logger.info(f"Attempting to organize: {source} → {dest_folder}")
+
     if not source.exists():
+        logger.warning(f"Source file does not exist: {source}")
         return None
 
     MAX_RETRIES = 15
@@ -20,6 +23,8 @@ def organize_download(source: Path, dest_folder: Path) -> Path | None:
                 continue
 
             destination = resolve_unique_path(dest_folder, source.name)
+            logger.info(f"Moving to: {destination}")
+
             move_path(source, destination)
 
             logger.info(f"Organizado: {source.name} → {destination}")

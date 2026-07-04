@@ -30,13 +30,18 @@ class DownloadHandler(FileSystemEventHandler):
         self._handle_new_file(Path(event.dest_path))
 
     def _handle_new_file(self, path: Path):
+        logger.info(f"File event detected: {path}")
+
         if not path.exists():
+            logger.debug(f"File does not exist: {path}")
             return
 
         if path.is_dir():
+            logger.debug(f"Is directory, skipping: {path}")
             return
 
         if not is_inside_downloads(path):
+            logger.debug(f"Not inside Downloads folder: {path}")
             return
 
         if path.suffix.lower() in PARTIAL_EXTENSIONS:
@@ -53,6 +58,8 @@ class DownloadHandler(FileSystemEventHandler):
             lambda: self._process_file(path)
         )
         self._debounce_timers[file_key].start()
+
+        logger.info(f"Scheduled processing for: {path}")
 
     def _process_file(self, path: Path):
         file_key = str(path)
