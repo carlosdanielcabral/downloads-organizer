@@ -1,29 +1,19 @@
 import os
 from pathlib import Path
-from typing import Dict
 
-from lib.rules import Category
+from lib.config import Config
 
 
 def get_user_home() -> Path:
     return Path(os.environ.get("USERPROFILE", Path.home()))
 
 
-CATEGORY_FOLDERS: Dict[Category, str] = {
-    Category.IMAGES: "Imagens/Downloads",
-    Category.VIDEOS: "Vídeos/Downloads",
-    Category.AUDIO: "Músicas/Downloads",
-    Category.DOCUMENTS: "Documentos/Downloads",
-    Category.OTHER: "Downloads/Outros",
-}
-
-
 def get_downloads_folder() -> Path:
     return get_user_home() / "Downloads"
 
 
-def resolve_destination(category: Category) -> Path:
-    relative_path = CATEGORY_FOLDERS[category]
+def resolve_destination(category: str, config: Config) -> Path:
+    relative_path = config.get_folder_path(category)
     destination = get_user_home() / relative_path
 
     destination.mkdir(parents=True, exist_ok=True)
