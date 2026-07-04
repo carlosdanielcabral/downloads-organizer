@@ -47,10 +47,10 @@
   },
   "folder_mappings": {
     "IMAGES": "C:/Users/devca/OneDrive/Pictures/Screenshots",
-    "VIDEOS": "Vídeos/Downloads",
-    "AUDIO": "Músicas/Downloads",
-    "DOCUMENTS": "Documentos/Downloads",
-    "OTHER": "Downloads/Outros"
+    "VIDEOS": "C:/Users/devca/Videos/Downloads",
+    "AUDIO": "C:/Users/devca/Music/Downloads",
+    "DOCUMENTS": "C:/Users/devca/OneDrive/Documentos/Downloads",
+    "OTHER": "C:/Users/devca/Downloads/Unknown"
   },
   "watch_folder": null,
   "delay_minutes": 1

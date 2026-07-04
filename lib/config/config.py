@@ -57,6 +57,12 @@ class Config:
     def get_delay_minutes(self) -> int:
         return self.data.get("delay_minutes", 30)
 
+    def get_history_retention_days(self) -> int:
+        return self.data.get("history_retention_days", 30)
+
+    def set_history_retention_days(self, days: int) -> None:
+        self.data["history_retention_days"] = days
+
     def save(self, path: Path) -> None:
         with open(path, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=2, ensure_ascii=False)

@@ -29,40 +29,42 @@ class SettingsSection(ctk.CTkFrame):
 
     def _setup_watch_folder_input(self) -> None:
         path_label = ctk.CTkLabel(self, text="Pasta Monitorada:", font=("Arial", 12))
-        path_label.pack(anchor="w", padx=5, pady=(10, 0))
+        path_label.pack(anchor="w", padx=20, pady=(15, 0))
 
         current_path = self._config.get_watch_folder() or str(get_downloads_folder())
 
         self._file_picker = FilePicker(self, initial_path=current_path, on_change=self._on_watch_folder_change)
-        self._file_picker.pack(fill="x", padx=5, pady=5)
+        self._file_picker.pack(fill="x", padx=20, pady=5)
 
         info_label = ctk.CTkLabel(
             self,
             text="Selecione a pasta que deseja monitorar para novos downloads.",
             font=("Arial", 10),
         )
-        info_label.pack(anchor="w", padx=5, pady=(0, 5))
+        info_label.pack(anchor="w", padx=20, pady=(0, 10))
 
     def _setup_notifications_input(self) -> None:
         notifications_frame = ctk.CTkFrame(self)
-        notifications_frame.pack(fill="x", padx=5, pady=10)
+        notifications_frame.pack(fill="x", padx=20, pady=(5, 10))
 
         self._notifications_checkbox = ctk.CTkCheckBox(
             notifications_frame,
             text="Habilitar notificações ao organizar arquivos",
             command=self._on_notifications_toggle,
         )
-        self._notifications_checkbox.pack(anchor="w", padx=5, pady=5)
+        self._notifications_checkbox.pack(anchor="w", padx=20, pady=10)
 
     def _setup_delay_input(self) -> None:
         delay_frame = ctk.CTkFrame(self)
-        delay_frame.pack(fill="x", padx=5, pady=10)
+        delay_frame.pack(fill="x", padx=20, pady=(5, 15))
 
         delay_label = ctk.CTkLabel(delay_frame, text="Delay antes de mover (minutos):", font=("Arial", 12))
-        delay_label.pack(anchor="w", padx=5, pady=5)
+        delay_label.pack(anchor="w", padx=20, pady=(10, 0))
 
-        self._delay_entry = ctk.CTkEntry(delay_frame, width=100)
-        self._delay_entry.pack(anchor="w", padx=5, pady=5)
+        validate_command = (self.register(self._is_valid_delay_input), "%P")
+
+        self._delay_entry = ctk.CTkEntry(delay_frame, width=100, validate="key", validatecommand=validate_command)
+        self._delay_entry.pack(anchor="w", padx=20, pady=(5, 10))
         self._delay_entry.bind("<KeyRelease>", lambda event: self._on_delay_change(event.widget.get()))
 
     def _load_values(self) -> None:
@@ -74,6 +76,9 @@ class SettingsSection(ctk.CTkFrame):
         self._notifications_checkbox.set(self._config.get_enable_notifications())
         self._delay_entry.delete(0, "end")
         self._delay_entry.insert(0, str(self._config.get_delay_minutes()))
+
+    def _is_valid_delay_input(self, value: str) -> bool:
+        return value == "" or value.isdigit()
 
     def _on_watch_folder_change(self, path: str) -> None:
         self._config.set_watch_folder(path)
