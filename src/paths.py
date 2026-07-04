@@ -10,10 +10,10 @@ def get_user_home() -> Path:
 
 
 CATEGORY_FOLDERS: Dict[Category, str] = {
-    Category.IMAGES: "Pictures/Downloads",
-    Category.VIDEOS: "Videos/Downloads",
-    Category.AUDIO: "Music/Downloads",
-    Category.DOCUMENTS: "Documents/Downloads",
+    Category.IMAGES: "Imagens/Downloads",
+    Category.VIDEOS: "Vídeos/Downloads",
+    Category.AUDIO: "Músicas/Downloads",
+    Category.DOCUMENTS: "Documentos/Downloads",
     Category.OTHER: "Downloads/Outros",
 }
 
