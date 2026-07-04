@@ -29,18 +29,25 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
             item.text = "Retomar"
             status_item.text = "Pausado"
 
+    def on_config(icon, item):
+        from view.gui import show_config_window
+        
+        watcher.stop()
+        show_config_window(config, config_path, on_save_callback=lambda: watcher.start())
+
     def on_quit(icon, item):
         watcher.stop()
         icon.stop()
 
     status_item = pystray.MenuItem("Monitorando", None, enabled=False)
     pause_item = pystray.MenuItem("Pausar", on_pause_toggle)
+    config_item = pystray.MenuItem("Configurações", on_config)
     quit_item = pystray.MenuItem("Sair", on_quit)
 
     icon = pystray.Icon(
         "download_organizer",
         create_icon(),
-        menu=pystray.Menu(status_item, pause_item, quit_item)
+        menu=pystray.Menu(status_item, pause_item, config_item, quit_item)
     )
 
     icon.run()
