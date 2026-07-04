@@ -59,6 +59,7 @@ class Config:
             "OTHER": "Downloads/Outros",
         },
         "watch_folder": None,
+        "enable_notifications": True,
     }
 
     def __init__(self, data: Dict[str, Any]):
@@ -85,6 +86,12 @@ class Config:
 
     def get_watch_folder(self) -> str:
         return self.data["watch_folder"]
+
+    def set_enable_notifications(self, enabled: bool) -> None:
+        self.data["enable_notifications"] = enabled
+
+    def get_enable_notifications(self) -> bool:
+        return self.data.get("enable_notifications", True)
 
     def save(self, path: Path) -> None:
         with open(path, "w", encoding="utf-8") as f:
