@@ -44,7 +44,7 @@ class SettingsSection(ctk.CTkFrame):
         info_label.pack(anchor="w", padx=5, pady=(0, 5))
 
     def _setup_notifications_input(self) -> None:
-        notifications_frame = ctk.CTkFrame(self, fg_color="transparent")
+        notifications_frame = ctk.CTkFrame(self)
         notifications_frame.pack(fill="x", padx=5, pady=10)
 
         self._notifications_checkbox = ctk.CTkCheckBox(
@@ -55,7 +55,7 @@ class SettingsSection(ctk.CTkFrame):
         self._notifications_checkbox.pack(anchor="w", padx=5, pady=5)
 
     def _setup_delay_input(self) -> None:
-        delay_frame = ctk.CTkFrame(self, fg_color="transparent")
+        delay_frame = ctk.CTkFrame(self)
         delay_frame.pack(fill="x", padx=5, pady=10)
 
         delay_label = ctk.CTkLabel(delay_frame, text="Delay antes de mover (minutos):", font=("Arial", 12))
