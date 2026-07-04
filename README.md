@@ -1,5 +1,7 @@
 # Organizador Inteligente de Downloads
 
+<img width="667" height="539" alt="image" src="https://github.com/user-attachments/assets/d7a73446-ca70-41b5-85ec-51aa58d07b26" />
+
 Aplicativo Python em background que monitora a pasta Downloads do Windows, detecta downloads concluídos e move arquivos para subpastas organizadas por tipo.
 
 ## Funcionalidades
