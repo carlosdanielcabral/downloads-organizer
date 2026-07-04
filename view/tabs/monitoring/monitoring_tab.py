@@ -59,7 +59,7 @@ class MonitoringTab(ctk.CTkFrame):
 
     def _setup_settings_section(self, config: Config) -> None:
         section_label = ctk.CTkLabel(self._container, text="Configurações", font=("Arial", 14, "bold"))
-        section_label.pack(anchor="w", padx=20, pady=(10, 0))
+        section_label.pack(anchor="w", padx=20, pady=(15, 0))
 
         self._settings_section = SettingsSection(self._container, config=config)
-        self._settings_section.pack(fill="x", padx=20, pady=(5, 10))
+        self._settings_section.pack(fill="x", padx=20, pady=(5, 15))
