@@ -4,9 +4,9 @@ from PIL import Image, ImageTk
 
 from lib.config.config import Config
 from lib.processing.file_processor import FileProcessor
-from view.tabs.extensions_tab import ExtensionsTab
-from view.tabs.folders_tab import FoldersTab
-from view.tabs.monitoring_tab import MonitoringTab
+from view.tabs.extensions.extensions_tab import ExtensionsTab
+from view.tabs.folders.folders_tab import FoldersTab
+from view.tabs.monitoring.monitoring_tab import MonitoringTab
 
 WINDOW_TITLE = "Download Organizer"
 WINDOW_GEOMETRY = "900x700"
