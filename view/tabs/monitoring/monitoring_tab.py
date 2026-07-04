@@ -31,7 +31,7 @@ class MonitoringTab(ctk.CTkFrame):
             self._history_section.unregister_observer()
 
     def _setup_ui(self, config: Config, processor: FileProcessor, move_history: MoveHistory) -> None:
-        self._container = ctk.CTkScrollableFrame(self, fg_color="transparent")
+        self._container = ctk.CTkScrollableFrame(self)
         self._container.pack(fill="both", expand=True)
 
         self._setup_status_section(processor)
