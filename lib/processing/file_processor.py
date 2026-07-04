@@ -3,7 +3,7 @@ from pathlib import Path
 
 from lib.config.config import Config
 from lib.queue.delay_queue import DelayQueue
-from lib.processing.mover import organize_download
+from lib.processing.file_mover import FileMover
 from lib.notifications.notifications import NotificationService
 from lib.processing.paths import is_inside_downloads, resolve_destination
 from lib.processing.rules import PARTIAL_EXTENSIONS, get_category
@@ -22,10 +22,11 @@ class FileProcessor:
     pending moves can be forced to execute immediately via move_pending.
     """
 
-    def __init__(self, config: Config, delay_queue: DelayQueue, notification_service: NotificationService):
+    def __init__(self, config: Config, delay_queue: DelayQueue, notification_service: NotificationService, file_mover: FileMover):
         self._config = config
         self._delay_queue = delay_queue
         self._notification_service = notification_service
+        self._file_mover = file_mover
 
     def process(self, path: Path) -> None:
         if not self._is_valid(path):
@@ -58,7 +59,10 @@ class FileProcessor:
 
         logger.info(f"Processing {path.name} as {category}")
 
-        organize_download(path, destination, self._config, self._notification_service)
+        moved_to = self._file_mover.move(path, destination)
+
+        if moved_to and self._config.get_enable_notifications():
+            self._notification_service.notify_file_moved(path.name, moved_to)
 
     def _is_valid(self, path: Path) -> bool:
         if not path.exists():

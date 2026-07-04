@@ -6,6 +6,7 @@ from lib.queue.delay_queue import DelayQueue
 from lib.watcher.file_event_handler import FileEventHandler
 from lib.watcher.file_event_watcher import FileEventWatcher
 from lib.processing.file_processor import FileProcessor
+from lib.processing.file_mover import FileMover
 from lib.queue.file_queue import FileQueue
 from lib.notifications.notifications import NotificationService
 
@@ -23,8 +24,9 @@ class FileEventWatcherFactory:
     def create(watch_path: Path, config: Config, notification_service: NotificationService) -> FileEventWatcher:
         file_queue = FileQueue()
         delay_queue = DelayQueue()
+        file_mover = FileMover()
         paused_event = threading.Event()
-        processor = FileProcessor(config, delay_queue, notification_service)
+        processor = FileProcessor(config, delay_queue, notification_service, file_mover)
         handler = FileEventHandler(file_queue)
 
         return FileEventWatcher(watch_path, file_queue, paused_event, processor, handler)
