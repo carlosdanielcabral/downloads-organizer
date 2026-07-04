@@ -44,12 +44,9 @@ class TrayIcon:
             pystray.MenuItem(status_label, None, enabled=False),
             pystray.MenuItem(toggle_label, self._on_pause_toggle),
             pystray.MenuItem("Mover Agora", self._on_move_now),
-            pystray.MenuItem("Configurações", self._on_open_window),
+            pystray.MenuItem("Configurações", self._on_open_window, default=True),
             pystray.MenuItem("Sair", self._on_quit),
         )
-
-    def _on_left_click(self, icon) -> None:
-        self._gui_manager.open_window()
 
     def _on_pause_toggle(self, icon, item) -> None:
         if self._watcher.is_paused():
