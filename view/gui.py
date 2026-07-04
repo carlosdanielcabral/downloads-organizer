@@ -54,3 +54,6 @@ class ConfigWindow(ctk.CTk):
 def show_config_window(config: Config, config_path: Path, on_save_callback=None):
     app = ConfigWindow(config, config_path, on_save_callback)
     app.mainloop()
+    
+    if on_save_callback:
+        on_save_callback()

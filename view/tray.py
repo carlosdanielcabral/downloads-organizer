@@ -1,4 +1,6 @@
 import threading
+import subprocess
+import sys
 from pathlib import Path
 from PIL import Image, ImageDraw
 
@@ -30,16 +32,11 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
             status_item.text = "Pausado"
 
     def on_config(icon, item):
-        from view.gui import show_config_window
-        import threading
-        
         watcher.stop()
         
-        def run_gui():
-            show_config_window(config, config_path, on_save_callback=lambda: watcher.start())
+        subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config import Config; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'))"])
         
-        gui_thread = threading.Thread(target=run_gui, daemon=True)
-        gui_thread.start()
+        watcher.start()
 
     def on_quit(icon, item):
         watcher.stop()
