@@ -13,6 +13,15 @@ logger = logging.getLogger(__name__)
 
 
 class DownloadHandler(FileSystemEventHandler):
+    """
+    Watchdog event handler that organizes files as they appear in the Downloads folder.
+
+    Listens for file creation and move events, debounces rapid successive events for
+    the same file, and schedules the actual move operation after a configurable delay.
+    Skips directories, partial downloads, and files outside the Downloads folder.
+    Respects a pause flag that allows temporarily suspending all processing.
+    """
+
     def __init__(self, paused_event: threading.Event, config: Config):
         super().__init__()
         self.paused_event = paused_event

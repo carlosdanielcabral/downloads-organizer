@@ -12,16 +12,32 @@ logger = logging.getLogger(__name__)
 
 
 class DownloadWatcher:
-    def __init__(self, watch_path: Path, paused_event: threading.Event, config: Config):
+    """
+    Monitors a folder for new files and coordinates their organization.
+
+    Owns the pause state and exposes pause/resume controls. Manages the
+    lifecycle of the watchdog Observer and the DownloadHandler attached to it.
+    """
+
+    def __init__(self, watch_path: Path, config: Config):
         self.watch_path = watch_path
-        self.paused_event = paused_event
         self.config = config
+        self._paused_event = threading.Event()
         self.observer: Optional[Observer] = None
         self.handler: Optional[DownloadHandler] = None
 
+    def pause(self) -> None:
+        self._paused_event.set()
+
+    def resume(self) -> None:
+        self._paused_event.clear()
+
+    def is_paused(self) -> bool:
+        return self._paused_event.is_set()
+
     def start(self):
         self.observer = Observer()
-        self.handler = DownloadHandler(self.paused_event, self.config)
+        self.handler = DownloadHandler(self._paused_event, self.config)
         self.observer.schedule(self.handler, str(self.watch_path), recursive=False)
         self.observer.start()
 

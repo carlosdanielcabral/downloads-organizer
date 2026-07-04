@@ -1,11 +1,10 @@
 import logging
-import threading
 from pathlib import Path
 
 from lib.config import Config
 from lib.ipc_server import IpcServer, COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG
 from lib.paths import get_downloads_folder
-from view.tray import run_tray
+from view.tray import TrayIcon
 from lib.watcher import DownloadWatcher
 
 logging.basicConfig(
@@ -18,10 +17,9 @@ def main():
     config_path = Path(__file__).parent / "config.json"
     config = Config.load(config_path)
 
-    paused = threading.Event()
     downloads_folder = get_downloads_folder()
 
-    watcher = DownloadWatcher(downloads_folder, paused, config)
+    watcher = DownloadWatcher(downloads_folder, config)
     watcher.start()
 
     ipc_server = IpcServer()
@@ -40,8 +38,10 @@ def main():
     ipc_server.register_handler(COMMAND_RELOAD_CONFIG, reload_config)
     ipc_server.start()
 
+    tray = TrayIcon(watcher, config_path, ipc_server.get_port())
+
     try:
-        run_tray(watcher, paused, config, config_path, ipc_server.get_port())
+        tray.run()
     except KeyboardInterrupt:
         watcher.stop()
     finally:

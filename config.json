@@ -52,5 +52,6 @@
     "DOCUMENTS": "Documentos/Downloads",
     "OTHER": "Downloads/Outros"
   },
-  "watch_folder": null
+  "watch_folder": null,
+  "delay_minutes": 0
 }

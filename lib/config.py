@@ -6,6 +6,16 @@ DEFAULT_CONFIG_PATH = Path(__file__).parent.parent / "default_config.json"
 
 
 class Config:
+    """
+    Represents the application configuration.
+
+    Holds the mappings between file extensions and categories, categories and
+    destination folder paths, as well as general settings such as the watched
+    folder, notification preferences and delay before moving files.
+
+    Can be loaded from a JSON file via `load`, falling back to the bundled
+    defaults via `default`, and persisted back to disk via `save`.
+    """
 
     def __init__(self, data: Dict[str, Any]):
         self.data = data
