@@ -27,7 +27,7 @@ class ConfigWindow(ctk.CTkToplevel):
     to prevent dangling callbacks from a destroyed widget.
     """
 
-    def __init__(self, config: Config, config_path: Path, processor: FileProcessor, reload_config_callback=None, move_history: MoveHistory = None):
+    def __init__(self, config: Config, config_path: Path, processor: FileProcessor, reload_config_callback=None, move_history: MoveHistory = None, quit_callback=None):
         super().__init__()
 
         self.lift()
@@ -38,6 +38,7 @@ class ConfigWindow(ctk.CTkToplevel):
         self._processor = processor
         self._reload_config_callback = reload_config_callback
         self._move_history = move_history
+        self._quit_callback = quit_callback
 
         self.title(WINDOW_TITLE)
         self.geometry(WINDOW_GEOMETRY)
@@ -88,7 +89,10 @@ class ConfigWindow(ctk.CTkToplevel):
         footer_frame.pack(side="bottom", pady=10, padx=10, fill="x")
 
         save_button = ctk.CTkButton(footer_frame, text="Salvar e Aplicar", command=self._on_save_and_apply, height=40)
-        save_button.pack(padx=5, pady=5, fill="x")
+        save_button.pack(side="left", padx=(5, 5), pady=5, expand=True, fill="x")
+
+        quit_button = ctk.CTkButton(footer_frame, text="Sair", command=self._on_quit, height=40, fg_color="#c0392b", hover_color="#96281b", width=100)
+        quit_button.pack(side="right", padx=(0, 5), pady=5)
 
     def _on_save_and_apply(self) -> None:
         self._config.save(self._config_path)
@@ -97,6 +101,12 @@ class ConfigWindow(ctk.CTkToplevel):
             self._reload_config_callback()
 
         self._on_close()
+
+    def _on_quit(self) -> None:
+        self._on_close()
+
+        if self._quit_callback:
+            self._quit_callback()
 
     def _on_close(self) -> None:
         self._monitoring_tab.unregister_observer()

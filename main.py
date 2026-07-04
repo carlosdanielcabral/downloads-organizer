@@ -47,6 +47,8 @@ def main():
 
     tray = TrayIcon(watcher=watcher, gui_manager=gui_manager)
 
+    gui_manager.set_quit_callback(tray.stop)
+
     try:
         tray.run()
     except KeyboardInterrupt:

@@ -25,6 +25,7 @@ class GuiManager:
         self._config_path = config_path
         self._reload_config_callback = reload_config_callback
         self._move_history = move_history
+        self._quit_callback = None
         self._window = None
         self._root = None
         self._ready = threading.Event()
@@ -35,6 +36,9 @@ class GuiManager:
 
     def open_window(self) -> None:
         self._root.after(0, self._open_or_focus_window)
+
+    def set_quit_callback(self, callback) -> None:
+        self._quit_callback = callback
 
     def _run_gui_thread(self) -> None:
         import customtkinter as ctk
@@ -73,4 +77,5 @@ class GuiManager:
             processor=processor,
             reload_config_callback=self._reload_config_callback,
             move_history=self._move_history,
+            quit_callback=self._quit_callback,
         )
