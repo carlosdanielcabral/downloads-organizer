@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from lib.file_utils import move_path, resolve_unique_path, wait_until_unlocked
+from lib.notifications import show_file_moved_notification
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,8 @@ def organize_download(source: Path, dest_folder: Path) -> Path | None:
             move_path(source, destination)
 
             logger.info(f"Organizado: {source.name} → {destination}")
+
+            show_file_moved_notification(source.name, destination)
 
             return destination
 
