@@ -31,9 +31,15 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
 
     def on_config(icon, item):
         from view.gui import show_config_window
+        import threading
         
         watcher.stop()
-        show_config_window(config, config_path, on_save_callback=lambda: watcher.start())
+        
+        def run_gui():
+            show_config_window(config, config_path, on_save_callback=lambda: watcher.start())
+        
+        gui_thread = threading.Thread(target=run_gui, daemon=True)
+        gui_thread.start()
 
     def on_quit(icon, item):
         watcher.stop()

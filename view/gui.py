@@ -10,6 +10,9 @@ class ConfigWindow(ctk.CTk):
     def __init__(self, config: Config, config_path: Path, on_save_callback=None):
         super().__init__()
         
+        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("blue")
+        
         self.config = config
         self.config_path = config_path
         self.on_save_callback = on_save_callback
