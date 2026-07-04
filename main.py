@@ -3,7 +3,7 @@ import threading
 from pathlib import Path
 
 from lib.config import Config
-from lib.ipc_server import IpcServer, COMMAND_MOVE_NOW
+from lib.ipc_server import IpcServer, COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG
 from lib.paths import get_downloads_folder
 from view.tray import run_tray
 from lib.watcher import DownloadWatcher
@@ -29,6 +29,15 @@ def main():
         COMMAND_MOVE_NOW,
         lambda: watcher.handler.move_pending_files() if watcher.handler else None
     )
+
+    def reload_config():
+        new_config = Config.load(config_path)
+        watcher.config = new_config
+
+        if watcher.handler:
+            watcher.handler.update_config(new_config)
+
+    ipc_server.register_handler(COMMAND_RELOAD_CONFIG, reload_config)
     ipc_server.start()
 
     try:
