@@ -10,6 +10,7 @@ Aplicativo Python em background que monitora a pasta Downloads do Windows, detec
 - Organização por tipo de arquivo (imagens, vídeos, áudios, documentos, outros)
 - **Interface gráfica** que abre automaticamente ao iniciar (CustomTkinter)
 - **Seção Status** em tempo real: lista de arquivos pendentes com horário previsto de movimentação e botões para mover ou cancelar individualmente
+- **Histórico persistente** de arquivos movidos com retenção configurável (padrão: 30 dias)
 - Edição de mapeamento extensão → categoria
 - Edição de mapeamento categoria → pasta
 - Seleção da pasta monitorada
@@ -33,11 +34,26 @@ pip install -r requirements.txt
 
 ## Execução
 
+### Via Python
+
 ```bash
 python main.py
 ```
 
-A janela de configurações abre automaticamente. O aplicativo continua rodando em background via bandeja do sistema após fechar a janela.
+### Via executável
+
+Para gerar um `.exe` standalone (requer `pyinstaller`):
+
+```bash
+pip install -r requirements-dev.txt
+python build.py
+```
+
+O executável será gerado em `dist/DownloadOrganizer.exe`. O `config.json` e o `history.json` são criados automaticamente na mesma pasta do executável.
+
+---
+
+A janela de configurações abre automaticamente ao iniciar. O aplicativo continua rodando em background via bandeja do sistema após fechar a janela.
 
 ## Interface Gráfica
 
@@ -60,11 +76,19 @@ Exibe em tempo real os arquivos aguardando movimentação:
 
 A lista é atualizada automaticamente via Observer — sem polling.
 
+#### Seção Histórico
+
+Exibe os arquivos movidos dentro do período de retenção configurado:
+- Formato: `nome_arquivo → /caminho/destino — DD/MM/YYYY HH:MM`
+- Altura dinâmica: cresce com o conteúdo até um máximo, depois habilita scroll
+- Persiste entre sessões em `history.json`
+- Purge automático diário: entradas mais antigas que o período de retenção são removidas
+
 #### Seção Configurações
 
 - **Pasta Monitorada**: selecione a pasta a monitorar (padrão: `%USERPROFILE%\Downloads`)
 - **Notificações**: habilita ou desabilita notificações toast ao organizar arquivos
-- **Delay antes de mover**: tempo em minutos antes de mover um arquivo detectado (0 = imediato)
+- **Delay antes de mover**: tempo em minutos antes de mover um arquivo detectado (0 = imediato, apenas números)
 
 ### Aba Pastas
 
@@ -79,9 +103,10 @@ Visualize e edite o mapeamento de extensões para categorias:
 - Dropdown por extensão: IMAGES, VIDEOS, AUDIO, DOCUMENTS, OTHER
 - Botão "X" para remover uma extensão
 
-### Salvar e Aplicar
+### Rodapé
 
-Clique em "Salvar e Aplicar" para persistir todas as configurações em `config.json` e aplicar imediatamente ao watcher. A janela é fechada após salvar.
+- **Salvar e Aplicar**: persiste todas as configurações em `config.json`, aplica imediatamente ao watcher e fecha a janela
+- **Parar** *(vermelho)*: encerra completamente o aplicativo
 
 ## Categorias e Destinos (Padrão)
 
@@ -104,7 +129,8 @@ Clique em "Salvar e Aplicar" para persistir todas as configurações em `config.
 ## Detalhes Técnicos
 
 - GUI e daemon rodam no mesmo processo — a seção Status acessa a fila diretamente via referência, sem IPC
-- Reatividade via padrão Observer: `DelayQueue` notifica a GUI a cada mutação da fila; a GUI agenda a atualização com `after(0)` para garantir thread-safety no tkinter
+- Reatividade via padrão Observer: `DelayQueue` e `MoveHistory` notificam a GUI a cada mutação; a GUI agenda a atualização com `after(0)` para garantir thread-safety no tkinter
+- Histórico persiste em `history.json`; purge automático via `threading.Timer` a cada 24h
 - Ignora arquivos de download incompleto (`.crdownload`, `.part`, `.tmp`, `.download`)
 - Aguarda conclusão da escrita antes de mover (debounce de 1.5s + verificação de lock)
 - Tratamento de arquivos bloqueados por outros processos (até 15 tentativas com 2s de intervalo)
@@ -119,6 +145,9 @@ download-organizer/
 ├── lib/                        # Lógica de negócio (core)
 │   ├── config/
 │   │   └── config.py           # Modelo de configuração
+│   ├── history/
+│   │   ├── moved_file.py       # Dataclass de arquivo movido (serialização)
+│   │   └── move_history.py     # Serviço de histórico com purge e Observer
 │   ├── processing/
 │   │   ├── file_processor.py   # Orquestração: valida, agenda ou move
 │   │   ├── file_mover.py       # Operação de movimentação
@@ -134,23 +163,32 @@ download-organizer/
 │   ├── utils/
 │   │   └── file_utils.py       # Operações genéricas de filesystem
 │   └── watcher/
-│       ├── file_event_handler.py  # Handler de eventos do watchdog
-│       ├── file_event_watcher.py  # Monitoramento e ciclo de vida
-│       └── file_event_watcher_factory.py  # Montagem das dependências
+│       ├── file_event_handler.py         # Handler de eventos do watchdog
+│       ├── file_event_watcher.py         # Monitoramento e ciclo de vida
+│       └── file_event_watcher_factory.py # Montagem das dependências
 ├── view/                       # Interface gráfica
 │   ├── gui.py                  # Janela principal (ConfigWindow)
 │   ├── gui_manager.py          # Singleton e thread da janela
 │   ├── tray.py                 # Bandeja do sistema
 │   ├── tabs/
-│   │   ├── monitoring_tab.py   # Aba Monitoramento (Status + Configurações)
-│   │   ├── folders_tab.py      # Aba Pastas
-│   │   └── extensions_tab.py   # Aba Extensões
+│   │   ├── monitoring/
+│   │   │   ├── monitoring_tab.py   # Aba Monitoramento
+│   │   │   ├── status_section.py   # Seção de arquivos pendentes
+│   │   │   ├── history_section.py  # Seção de histórico
+│   │   │   └── settings_section.py # Seção de configurações
+│   │   ├── folders/
+│   │   │   └── folders_tab.py      # Aba Pastas
+│   │   └── extensions/
+│   │       └── extensions_tab.py   # Aba Extensões
 │   └── widgets/
 │       └── file_picker.py      # Seletor de pasta reutilizável
 ├── main.py                     # Ponto de entrada
+├── build.py                    # Script para gerar o executável
 ├── config.json                 # Configurações (criado em runtime)
+├── history.json                # Histórico de movimentações (criado em runtime)
 ├── default_config.json         # Configurações padrão
-├── requirements.txt
+├── requirements.txt            # Dependências de runtime
+├── requirements-dev.txt        # Dependências de desenvolvimento (PyInstaller)
 └── README.md
 ```
 
@@ -161,7 +199,8 @@ download-organizer/
 3. Reabra a janela clicando no ícone da bandeja (botão esquerdo)
 4. Copie `teste.png` para a pasta monitorada — o arquivo deve aparecer na seção Status com o horário previsto
 5. Clique em "Mover" na linha do arquivo — deve ser movido imediatamente para a pasta configurada
-6. Copie `teste.png` novamente → deve virar `teste (1).png`
-7. Copie um arquivo e clique em "Cancelar" — o arquivo deve ser removido da fila e permanecer em Downloads
-8. Pause via bandeja → copie um arquivo → não deve entrar na fila
-9. Retome → o próximo arquivo detectado deve ser agendado normalmente
+6. O arquivo movido deve aparecer na seção Histórico com nome, destino e horário
+7. Copie `teste.png` novamente → deve virar `teste (1).png`
+8. Copie um arquivo e clique em "Cancelar" — o arquivo deve ser removido da fila e permanecer em Downloads
+9. Pause via bandeja → copie um arquivo → não deve entrar na fila
+10. Retome → o próximo arquivo detectado deve ser agendado normalmente
