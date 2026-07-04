@@ -30,13 +30,13 @@ python -m src.main
 
 | Categoria | Pasta Destino | Extensões |
 |-----------|---------------|-----------|
-| Imagens | `Pictures/Downloads` | png, jpg, jpeg, gif, webp, bmp, svg, ico, tiff |
-| Vídeos | `Videos/Downloads` | mp4, mkv, avi, mov, wmv, webm, flv |
-| Áudios | `Music/Downloads` | mp3, wav, flac, ogg, m4a, aac, wma |
-| Documentos | `Documents/Downloads` | pdf, doc, docx, xls, xlsx, ppt, pptx, txt, md, csv, rtf, exe, msi, bat, cmd, ps1, zip, rar, 7z, tar, gz |
+| Imagens | `Imagens/Downloads` | png, jpg, jpeg, gif, webp, bmp, svg, ico, tiff |
+| Vídeos | `Vídeos/Downloads` | mp4, mkv, avi, mov, wmv, webm, flv |
+| Áudios | `Músicas/Downloads` | mp3, wav, flac, ogg, m4a, aac, wma |
+| Documentos | `Documentos/Downloads` | pdf, doc, docx, xls, xlsx, ppt, pptx, txt, md, csv, rtf, exe, msi, bat, cmd, ps1, zip, rar, 7z, tar, gz |
 | Outros | `Downloads/Outros` | Extensões desconhecidas ou sem extensão |
 
-**Nota:** Documentos, executáveis e arquivos compactados são movidos para uma única pasta `Documents/Downloads`.
+**Nota:** Documentos, executáveis e arquivos compactados são movidos para uma única pasta `Documentos/Downloads`.
 
 ## Controles da Bandeja
 
