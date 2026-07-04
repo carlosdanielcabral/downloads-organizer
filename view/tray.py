@@ -2,7 +2,7 @@ import threading
 import subprocess
 import sys
 from pathlib import Path
-from PIL import Image, ImageDraw
+from PIL import Image
 
 import pystray
 
@@ -11,13 +11,12 @@ from lib.config import Config
 
 
 def create_icon() -> Image.Image:
-    image = Image.new("RGBA", (64, 64), color=(0, 120, 215, 255))
-    draw = ImageDraw.Draw(image)
-
-    draw.rectangle([16, 16, 48, 48], fill=(255, 255, 255, 255))
-    draw.rectangle([20, 20, 44, 44], fill=(0, 120, 215, 255))
-
-    return image
+    icon_path = Path(__file__).parent / "assets" / "icon.png"
+    
+    if icon_path.exists():
+        return Image.open(icon_path)
+    
+    return Image.new("RGBA", (64, 64), color=(0, 120, 215, 255))
 
 
 def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, config_path: Path) -> None:
@@ -49,6 +48,9 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
         
         subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config import Config; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'), move_now_callback=lambda: watcher.handler.move_pending_files())"])
         
+        new_config = Config.load(config_path)
+        watcher.config = new_config
+        watcher.handler.update_config(new_config)
         watcher.start()
 
     def on_quit(icon, item):

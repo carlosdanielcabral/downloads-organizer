@@ -1,4 +1,6 @@
 import logging
+import asyncio
+import threading
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -6,24 +8,32 @@ logger = logging.getLogger(__name__)
 
 def show_file_moved_notification(file_name: str, destination: Path):
     try:
-        import win32gui
-        import win32con
-        import win32api
+        from desktop_notifier import DesktopNotifier, Urgency
         
         logger.info(f"Showing notification for: {file_name}")
         
-        title = "Download Organizer"
-        message = f"{file_name} → {destination.parent.name}"
+        icon_path = Path(__file__).parent.parent / "view" / "assets" / "icon.png"
         
-        win32gui.MessageBox(
-            0,
-            message,
-            title,
-            win32con.MB_OK | win32con.MB_ICONINFORMATION
-        )
+        async def send_notification():
+            notifier = DesktopNotifier("DownloadOrganizer")
+            await notifier.send(
+                title="Download Organizer",
+                message=f"{file_name} → {destination.parent.name}",
+                urgency=Urgency.Normal,
+                icon=icon_path
+            )
+        
+        def run_in_thread():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(send_notification())
+            loop.close()
+        
+        thread = threading.Thread(target=run_in_thread, daemon=True)
+        thread.start()
         
         logger.info("Notification sent successfully")
     except ImportError as e:
-        logger.error(f"pywin32 not installed: {e}")
+        logger.error(f"desktop-notifier not installed: {e}")
     except Exception as e:
         logger.error(f"Error showing notification: {e}")

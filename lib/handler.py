@@ -20,6 +20,9 @@ class DownloadHandler(FileSystemEventHandler):
         self._debounce_timers: dict[str, threading.Timer] = {}
         self._delay_timers: dict[str, threading.Timer] = {}
 
+    def update_config(self, config: Config):
+        self.config = config
+
     def on_created(self, event):
         if event.is_directory:
             return

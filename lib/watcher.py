@@ -17,11 +17,12 @@ class DownloadWatcher:
         self.paused_event = paused_event
         self.config = config
         self.observer: Optional[Observer] = None
+        self.handler: Optional[DownloadHandler] = None
 
     def start(self):
         self.observer = Observer()
-        handler = DownloadHandler(self.paused_event, self.config)
-        self.observer.schedule(handler, str(self.watch_path), recursive=False)
+        self.handler = DownloadHandler(self.paused_event, self.config)
+        self.observer.schedule(self.handler, str(self.watch_path), recursive=False)
         self.observer.start()
 
         logger.info(f"Watching: {self.watch_path}")
