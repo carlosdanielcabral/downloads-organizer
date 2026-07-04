@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from src.file_utils import move_path, resolve_unique_path, wait_until_unlocked
+from lib.file_utils import move_path, resolve_unique_path, wait_until_unlocked
 
 logger = logging.getLogger(__name__)
 

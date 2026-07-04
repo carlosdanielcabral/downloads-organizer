@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw
 
 import pystray
 
-from src.watcher import DownloadWatcher
+from lib.watcher import DownloadWatcher
 
 
 def create_icon() -> Image.Image:

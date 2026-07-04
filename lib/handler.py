@@ -4,9 +4,9 @@ from pathlib import Path
 
 from watchdog.events import FileSystemEventHandler
 
-from src.mover import organize_download
-from src.paths import is_inside_downloads, resolve_destination
-from src.rules import PARTIAL_EXTENSIONS, get_category
+from lib.mover import organize_download
+from lib.paths import is_inside_downloads, resolve_destination
+from lib.rules import PARTIAL_EXTENSIONS, get_category
 
 logger = logging.getLogger(__name__)
 

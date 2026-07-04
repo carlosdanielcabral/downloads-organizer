@@ -5,7 +5,7 @@ from typing import Optional
 
 from watchdog.observers import Observer
 
-from src.handler import DownloadHandler
+from lib.handler import DownloadHandler
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from typing import Dict
 
-from src.rules import Category
+from lib.rules import Category
 
 
 def get_user_home() -> Path:

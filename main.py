@@ -1,9 +1,9 @@
 import logging
 import threading
 
-from src.paths import get_downloads_folder
-from src.tray import run_tray
-from src.watcher import DownloadWatcher
+from lib.paths import get_downloads_folder
+from view.tray import run_tray
+from lib.watcher import DownloadWatcher
 
 logging.basicConfig(
     level=logging.INFO,
