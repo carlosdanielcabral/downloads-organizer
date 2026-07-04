@@ -9,11 +9,11 @@ from lib.config import Config
 
 
 def create_icon() -> Image.Image:
-    image = Image.new("RGB", (64, 64), color=(0, 120, 215))
+    image = Image.new("RGBA", (64, 64), color=(0, 120, 215, 255))
     draw = ImageDraw.Draw(image)
 
-    draw.rectangle([16, 16, 48, 48], fill=(255, 255, 255))
-    draw.rectangle([20, 20, 44, 44], fill=(0, 120, 215))
+    draw.rectangle([16, 16, 48, 48], fill=(255, 255, 255, 255))
+    draw.rectangle([20, 20, 44, 44], fill=(0, 120, 215, 255))
 
     return image
 
@@ -47,6 +47,7 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
     icon = pystray.Icon(
         "download_organizer",
         create_icon(),
+        "Download Organizer",
         menu=pystray.Menu(status_item, pause_item, config_item, quit_item)
     )
 
