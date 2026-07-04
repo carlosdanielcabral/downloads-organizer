@@ -60,6 +60,7 @@ class Config:
         },
         "watch_folder": None,
         "enable_notifications": True,
+        "delay_minutes": 30,
     }
 
     def __init__(self, data: Dict[str, Any]):
@@ -92,6 +93,12 @@ class Config:
 
     def get_enable_notifications(self) -> bool:
         return self.data.get("enable_notifications", True)
+
+    def set_delay_minutes(self, minutes: int) -> None:
+        self.data["delay_minutes"] = minutes
+
+    def get_delay_minutes(self) -> int:
+        return self.data.get("delay_minutes", 30)
 
     def save(self, path: Path) -> None:
         with open(path, "w", encoding="utf-8") as f:
