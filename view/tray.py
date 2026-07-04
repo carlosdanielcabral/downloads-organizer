@@ -45,15 +45,7 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
             watcher.handler.move_pending_files()
 
     def on_config(icon, item):
-        watcher.stop()
-        
-        subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config import Config; from lib.ipc_client import send_move_now; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'), move_now_callback=lambda: send_move_now({ipc_port}))"])
-        
-        new_config = Config.load(config_path)
-        watcher.config = new_config
-        if watcher.handler:
-            watcher.handler.update_config(new_config)
-        watcher.start()
+        subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config import Config; from lib.ipc_client import send_move_now, send_reload_config; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'), move_now_callback=lambda: send_move_now({ipc_port}), reload_config_callback=lambda: send_reload_config({ipc_port}))"])
 
     def on_quit(icon, item):
         watcher.stop()
