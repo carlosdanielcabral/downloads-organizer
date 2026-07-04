@@ -41,13 +41,26 @@ class StatusSection(ctk.CTkFrame):
         self._pending_list_frame = ctk.CTkFrame(self, fg_color="transparent")
         self._pending_list_frame.pack(fill="x", padx=10, pady=(10, 5))
 
+        buttons_frame = ctk.CTkFrame(self, fg_color="transparent")
+        buttons_frame.pack(fill="x", padx=10, pady=(5, 10))
+
         self._move_all_button = ctk.CTkButton(
-            self,
-            text="Mover Todos Agora",
+            buttons_frame,
+            text="Mover todos",
             command=self._on_move_all,
             height=32,
         )
-        self._move_all_button.pack(anchor="w", padx=10, pady=(5, 10))
+        self._move_all_button.pack(side="left", padx=(0, 5))
+
+        self._cancel_all_button = ctk.CTkButton(
+            buttons_frame,
+            text="Cancelar todos",
+            fg_color="gray",
+            hover_color="#555555",
+            command=self._on_cancel_all,
+            height=32,
+        )
+        self._cancel_all_button.pack(side="left")
 
         self._refresh()
 
@@ -63,7 +76,9 @@ class StatusSection(ctk.CTkFrame):
             for pending_file in pending_files:
                 self._render_pending_file_row(pending_file)
 
-        self._move_all_button.configure(state="normal" if pending_files else "disabled")
+        has_pending = bool(pending_files)
+        self._move_all_button.configure(state="normal" if has_pending else "disabled")
+        self._cancel_all_button.configure(state="normal" if has_pending else "disabled")
 
     def _render_empty_state(self) -> None:
         empty_label = ctk.CTkLabel(
@@ -129,6 +144,10 @@ class StatusSection(ctk.CTkFrame):
 
     def _on_move_all(self) -> None:
         self._processor.move_pending()
+
+    def _on_cancel_all(self) -> None:
+        for pending_file in self._processor.get_delay_queue().get_pending():
+            self._processor.cancel(pending_file.path)
 
     def _on_move_file(self, path: Path) -> None:
         if not path.exists():
