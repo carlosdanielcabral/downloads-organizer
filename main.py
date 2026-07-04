@@ -4,6 +4,7 @@ from pathlib import Path
 from lib.config import Config
 from lib.file_event_watcher_factory import FileEventWatcherFactory
 from lib.ipc_server import IpcServer, COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG
+from lib.notifications import NotificationService
 from lib.paths import get_downloads_folder
 from view.tray import TrayIcon
 
@@ -19,7 +20,10 @@ def main():
 
     downloads_folder = get_downloads_folder()
 
-    watcher = FileEventWatcherFactory.create(downloads_folder, config)
+    notification_service = NotificationService()
+    notification_service.start()
+
+    watcher = FileEventWatcherFactory.create(downloads_folder, config, notification_service)
     watcher.start()
 
     ipc_server = IpcServer()
@@ -43,6 +47,7 @@ def main():
         watcher.stop()
     finally:
         ipc_server.stop()
+        notification_service.stop()
 
 
 if __name__ == "__main__":

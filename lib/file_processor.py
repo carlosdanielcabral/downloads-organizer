@@ -4,6 +4,7 @@ from pathlib import Path
 from lib.config import Config
 from lib.delay_queue import DelayQueue
 from lib.mover import organize_download
+from lib.notifications import NotificationService
 from lib.paths import is_inside_downloads, resolve_destination
 from lib.rules import PARTIAL_EXTENSIONS, get_category
 
@@ -21,9 +22,10 @@ class FileProcessor:
     pending moves can be forced to execute immediately via move_pending.
     """
 
-    def __init__(self, config: Config, delay_queue: DelayQueue):
+    def __init__(self, config: Config, delay_queue: DelayQueue, notification_service: NotificationService):
         self._config = config
         self._delay_queue = delay_queue
+        self._notification_service = notification_service
 
     def process(self, path: Path) -> None:
         if not self._is_valid(path):
@@ -56,7 +58,7 @@ class FileProcessor:
 
         logger.info(f"Processing {path.name} as {category}")
 
-        organize_download(path, destination, self._config)
+        organize_download(path, destination, self._config, self._notification_service)
 
     def _is_valid(self, path: Path) -> bool:
         if not path.exists():

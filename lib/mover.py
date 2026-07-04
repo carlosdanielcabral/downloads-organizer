@@ -2,13 +2,13 @@ import logging
 from pathlib import Path
 
 from lib.file_utils import move_path, resolve_unique_path, wait_until_unlocked
-from lib.notifications import show_file_moved_notification
+from lib.notifications import NotificationService
 from lib.config import Config
 
 logger = logging.getLogger(__name__)
 
 
-def organize_download(source: Path, dest_folder: Path, config: Config) -> Path | None:
+def organize_download(source: Path, dest_folder: Path, config: Config, notification_service: NotificationService) -> Path | None:
     logger.info(f"Attempting to organize: {source} → {dest_folder}")
 
     if not source.exists():
@@ -32,7 +32,7 @@ def organize_download(source: Path, dest_folder: Path, config: Config) -> Path |
             logger.info(f"Organizado: {source.name} → {destination}")
 
             if config.get_enable_notifications():
-                show_file_moved_notification(source.name, destination)
+                notification_service.notify_file_moved(source.name, destination)
 
             return destination
 
