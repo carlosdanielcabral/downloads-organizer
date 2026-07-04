@@ -59,8 +59,7 @@ class TrayIcon:
         icon.menu = self._build_menu(is_paused=self._watcher.is_paused())
 
     def _on_move_now(self, icon, item):
-        if self._watcher.handler:
-            self._watcher.handler.move_pending_files()
+        self._watcher.move_pending_files()
 
     def _on_config(self, icon, item):
         config_path = self._config_path
