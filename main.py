@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from pathlib import Path
 
 from lib.config.config import Config
@@ -16,12 +17,20 @@ logging.basicConfig(
 )
 
 
+def _get_runtime_dir() -> Path:
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent
+
+    return Path(__file__).parent
+
+
 def main():
-    config_path = Path(__file__).parent / "config.json"
+    runtime_dir = _get_runtime_dir()
+    config_path = runtime_dir / "config.json"
     config = Config.load(config_path)
 
     downloads_folder = get_downloads_folder()
-    history_path = Path(__file__).parent / "history.json"
+    history_path = runtime_dir / "history.json"
 
     notification_service = NotificationService()
     notification_service.start()

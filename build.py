@@ -8,6 +8,8 @@ APP_NAME = "DownloadOrganizer"
 ICON_DATA_SRC = "view/assets/icon.png"
 ICON_DATA_DEST = "view/assets"
 
+SEPARATOR = ";" if sys.platform == "win32" else ":"
+
 PYINSTALLER_ARGS = [
     sys.executable, "-m", "PyInstaller",
     "--noconfirm",
@@ -15,7 +17,9 @@ PYINSTALLER_ARGS = [
     "--windowed",
     f"--name={APP_NAME}",
     "--collect-data=customtkinter",
-    f"--add-data={ICON_DATA_SRC}{';' if sys.platform == 'win32' else ':'}{ICON_DATA_DEST}",
+    "--collect-data=desktop_notifier",
+    f"--add-data=default_config.json{SEPARATOR}.",
+    f"--add-data={ICON_DATA_SRC}{SEPARATOR}{ICON_DATA_DEST}",
     ENTRY_POINT,
 ]
 

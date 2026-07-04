@@ -1,8 +1,17 @@
 import json
+import sys
 from pathlib import Path
 from typing import Dict, Any
 
-DEFAULT_CONFIG_PATH = Path(__file__).parent.parent / "default_config.json"
+
+def _get_default_config_path() -> Path:
+    if getattr(sys, 'frozen', False):
+        return Path(sys._MEIPASS) / "default_config.json"
+
+    return Path(__file__).parent.parent / "default_config.json"
+
+
+DEFAULT_CONFIG_PATH = _get_default_config_path()
 
 
 class Config:
