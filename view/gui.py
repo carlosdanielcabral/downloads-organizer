@@ -26,18 +26,18 @@ class ConfigWindow(ctk.CTk):
         self.tabview = ctk.CTkTabview(self)
         self.tabview.pack(fill="both", expand=True, padx=10, pady=10)
         
-        self.tabview.add("Extensões")
         self.tabview.add("Pastas")
         self.tabview.add("Monitoramento")
-        
-        self.extensions_tab = ExtensionsTab(self.tabview.tab("Extensões"), self.config)
-        self.extensions_tab.pack(fill="both", expand=True)
+        self.tabview.add("Extensões")
         
         self.folders_tab = FoldersTab(self.tabview.tab("Pastas"), self.config)
         self.folders_tab.pack(fill="both", expand=True)
         
         self.monitoring_tab = MonitoringTab(self.tabview.tab("Monitoramento"), self.config)
         self.monitoring_tab.pack(fill="both", expand=True)
+        
+        self.extensions_tab = ExtensionsTab(self.tabview.tab("Extensões"), self.config)
+        self.extensions_tab.pack(fill="both", expand=True)
         
         save_button = ctk.CTkButton(self, text="Salvar e Aplicar", command=self.save_and_apply, height=40)
         save_button.pack(pady=10, padx=10, fill="x")

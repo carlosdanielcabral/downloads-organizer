@@ -3,6 +3,8 @@ from lib.config import Config
 
 
 class ExtensionsTab(ctk.CTkFrame):
+    CATEGORIES = ["IMAGES", "VIDEOS", "AUDIO", "DOCUMENTS", "OTHER"]
+    
     def __init__(self, master, config: Config, **kwargs):
         super().__init__(master, **kwargs)
         
@@ -36,21 +38,23 @@ class ExtensionsTab(ctk.CTkFrame):
         ext_label = ctk.CTkLabel(row, text=f".{ext}", width=80)
         ext_label.pack(side="left", padx=5)
         
-        category_entry = ctk.CTkEntry(row, width=150)
-        category_entry.insert(0, category)
-        category_entry.pack(side="left", padx=5)
-        
         def on_category_change(value):
             self.config.set_extension_category(ext, value)
         
-        category_entry.bind("<KeyRelease>", lambda e: on_category_change(e.widget.get()))
+        category_menu = ctk.CTkOptionMenu(
+            row,
+            values=self.CATEGORIES,
+            command=on_category_change
+        )
+        category_menu.set(category)
+        category_menu.pack(side="left", padx=5)
         
         remove_button = ctk.CTkButton(row, text="X", width=30, fg_color="red", command=lambda: self.remove_extension(ext, row))
         remove_button.pack(side="left", padx=5)
         
         self.extension_rows[ext] = {
             "row": row,
-            "entry": category_entry
+            "menu": category_menu
         }
     
     def remove_extension(self, ext: str, row_widget):
