@@ -61,7 +61,9 @@ class SettingsSection(ctk.CTkFrame):
         delay_label = ctk.CTkLabel(delay_frame, text="Delay antes de mover (minutos):", font=("Arial", 12))
         delay_label.pack(anchor="w", padx=5, pady=5)
 
-        self._delay_entry = ctk.CTkEntry(delay_frame, width=100)
+        validate_command = (self.register(self._is_valid_delay_input), "%P")
+
+        self._delay_entry = ctk.CTkEntry(delay_frame, width=100, validate="key", validatecommand=validate_command)
         self._delay_entry.pack(anchor="w", padx=5, pady=5)
         self._delay_entry.bind("<KeyRelease>", lambda event: self._on_delay_change(event.widget.get()))
 
@@ -74,6 +76,9 @@ class SettingsSection(ctk.CTkFrame):
         self._notifications_checkbox.set(self._config.get_enable_notifications())
         self._delay_entry.delete(0, "end")
         self._delay_entry.insert(0, str(self._config.get_delay_minutes()))
+
+    def _is_valid_delay_input(self, value: str) -> bool:
+        return value == "" or value.isdigit()
 
     def _on_watch_folder_change(self, path: str) -> None:
         self._config.set_watch_folder(path)

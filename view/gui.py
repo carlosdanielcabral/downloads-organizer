@@ -75,7 +75,7 @@ class ConfigWindow(ctk.CTkToplevel):
             processor=self._processor,
             move_history=self._move_history,
         )
-        self._monitoring_tab.pack(fill="both", expand=True)
+        self._monitoring_tab.pack(fill="both", expand=True, anchor="n")
 
         self._folders_tab = FoldersTab(self._tabview.tab("Pastas"), self._config)
         self._folders_tab.pack(fill="both", expand=True)
