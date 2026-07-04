@@ -2,10 +2,10 @@ import logging
 from pathlib import Path
 
 from lib.config import Config
+from lib.file_event_watcher_factory import FileEventWatcherFactory
 from lib.ipc_server import IpcServer, COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG
 from lib.paths import get_downloads_folder
 from view.tray import TrayIcon
-from lib.watcher import DownloadWatcher
 
 logging.basicConfig(
     level=logging.INFO,
@@ -19,21 +19,18 @@ def main():
 
     downloads_folder = get_downloads_folder()
 
-    watcher = DownloadWatcher(downloads_folder, config)
+    watcher = FileEventWatcherFactory.create(downloads_folder, config)
     watcher.start()
 
     ipc_server = IpcServer()
     ipc_server.register_handler(
         COMMAND_MOVE_NOW,
-        lambda: watcher.handler.move_pending_files() if watcher.handler else None
+        lambda: watcher.move_pending_files()
     )
 
     def reload_config():
         new_config = Config.load(config_path)
-        watcher.config = new_config
-
-        if watcher.handler:
-            watcher.handler.update_config(new_config)
+        watcher.update_config(new_config)
 
     ipc_server.register_handler(COMMAND_RELOAD_CONFIG, reload_config)
     ipc_server.start()

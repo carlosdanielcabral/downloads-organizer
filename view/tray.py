@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pystray
 
-from lib.watcher import DownloadWatcher
+from lib.file_event_watcher import FileEventWatcher
 from view.icon import create_icon
 
 
@@ -17,7 +17,7 @@ class TrayIcon:
     appropriate components.
     """
 
-    def __init__(self, watcher: DownloadWatcher, config_path: Path, ipc_port: int):
+    def __init__(self, watcher: FileEventWatcher, config_path: Path, ipc_port: int):
         self._watcher = watcher
         self._config_path = config_path
         self._ipc_port = ipc_port
