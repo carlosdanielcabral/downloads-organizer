@@ -33,9 +33,24 @@ class MonitoringTab(ctk.CTkFrame):
         
         info_label = ctk.CTkLabel(frame, text="Selecione a pasta que deseja monitorar para novos downloads.", font=("Arial", 10))
         info_label.pack(anchor="w", padx=5, pady=5)
+        
+        notifications_frame = ctk.CTkFrame(frame)
+        notifications_frame.pack(fill="x", padx=5, pady=10)
+        
+        def on_notifications_toggle():
+            self.config.set_enable_notifications(self.notifications_checkbox.get())
+        
+        self.notifications_checkbox = ctk.CTkCheckBox(
+            notifications_frame,
+            text="Habilitar notificações ao organizar arquivos",
+            command=on_notifications_toggle
+        )
+        self.notifications_checkbox.pack(anchor="w", padx=5, pady=5)
     
     def load_monitoring_settings(self):
         current_path = self.config.get_watch_folder()
         
         if current_path:
             self.file_picker.set_path(current_path)
+        
+        self.notifications_checkbox.set(self.config.get_enable_notifications())
