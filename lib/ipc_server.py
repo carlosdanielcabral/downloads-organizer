@@ -5,6 +5,7 @@ import threading
 logger = logging.getLogger(__name__)
 
 COMMAND_MOVE_NOW = "MOVE_NOW"
+COMMAND_RELOAD_CONFIG = "RELOAD_CONFIG"
 RESPONSE_OK = "OK"
 RESPONSE_ERROR = "ERROR"
 
