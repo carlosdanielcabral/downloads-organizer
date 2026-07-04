@@ -1,6 +1,8 @@
-# Organizador Inteligente de Downloads
+# Downloads Organizer
 
-<img width="667" height="539" alt="image" src="https://github.com/user-attachments/assets/d7a73446-ca70-41b5-85ec-51aa58d07b26" />
+<img width="2304" height="1836" alt="icon" src="https://github.com/user-attachments/assets/e6c30c0e-b4d6-43ad-aacc-2d4d9e3f37c8" />
+
+## Descrição
 
 Aplicativo Python em background que monitora a pasta Downloads do Windows, detecta downloads concluídos e move arquivos para subpastas organizadas por tipo.
 
@@ -66,7 +68,11 @@ A janela de configurações abre automaticamente ao iniciar. O aplicativo contin
 
 ### Aba Monitoramento (padrão)
 
+<img width="716" height="514" alt="image" src="https://github.com/user-attachments/assets/463221aa-30eb-4996-ac45-35b5a9d6a10b" />
+
 #### Seção Status
+
+<img width="638" height="189" alt="image" src="https://github.com/user-attachments/assets/188a779e-5b27-4865-9050-6a1fea3de7b3" />
 
 Exibe em tempo real os arquivos aguardando movimentação:
 - Nome do arquivo e horário previsto de movimentação
@@ -78,6 +84,8 @@ A lista é atualizada automaticamente via Observer — sem polling.
 
 #### Seção Histórico
 
+<img width="626" height="148" alt="image" src="https://github.com/user-attachments/assets/9aedb0d0-f065-4236-ac86-09e10dac1bd8" />
+
 Exibe os arquivos movidos dentro do período de retenção configurado:
 - Formato: `nome_arquivo → /caminho/destino — DD/MM/YYYY HH:MM`
 - Altura dinâmica: cresce com o conteúdo até um máximo, depois habilita scroll
@@ -86,11 +94,17 @@ Exibe os arquivos movidos dentro do período de retenção configurado:
 
 #### Seção Configurações
 
+<img width="635" height="257" alt="image" src="https://github.com/user-attachments/assets/43bf63b9-756a-4916-b599-f99548b6fa2a" />
+
+
 - **Pasta Monitorada**: selecione a pasta a monitorar (padrão: `%USERPROFILE%\Downloads`)
 - **Notificações**: habilita ou desabilita notificações toast ao organizar arquivos
 - **Delay antes de mover**: tempo em minutos antes de mover um arquivo detectado (0 = imediato, apenas números)
 
 ### Aba Pastas
+
+<img width="673" height="481" alt="image" src="https://github.com/user-attachments/assets/316f1c3c-188b-4964-81e0-6644d3e74b0a" />
+
 
 Personalize as pastas de destino para cada categoria:
 - **IMAGES**, **VIDEOS**, **AUDIO**, **DOCUMENTS**, **OTHER**
@@ -98,12 +112,18 @@ Personalize as pastas de destino para cada categoria:
 
 ### Aba Extensões
 
+<img width="725" height="508" alt="image" src="https://github.com/user-attachments/assets/59223023-b828-4291-8553-09ba5dc82618" />
+
+
 Visualize e edite o mapeamento de extensões para categorias:
 - Lista scrollable com todas as extensões configuradas
 - Dropdown por extensão: IMAGES, VIDEOS, AUDIO, DOCUMENTS, OTHER
 - Botão "X" para remover uma extensão
 
 ### Rodapé
+
+<img width="733" height="67" alt="image" src="https://github.com/user-attachments/assets/4ff6496e-7296-428b-80ed-10be38ad3794" />
+
 
 - **Salvar e Aplicar**: persiste todas as configurações em `config.json`, aplica imediatamente ao watcher e fecha a janela
 - **Parar** *(vermelho)*: encerra completamente o aplicativo
@@ -119,6 +139,9 @@ Visualize e edite o mapeamento de extensões para categorias:
 | Outros | `Downloads/Outros` | Extensões desconhecidas ou sem extensão |
 
 ## Controles da Bandeja
+
+<img width="140" height="106" alt="image" src="https://github.com/user-attachments/assets/375e5f1e-a1ff-45f2-95d6-974425842a7a" />
+
 
 - **Status**: exibe "Monitorando" ou "Pausado"
 - **Pausar/Retomar**: suspende ou retoma a detecção de novos arquivos (arquivos já agendados continuam na fila)
