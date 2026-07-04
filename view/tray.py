@@ -24,12 +24,20 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
     def on_pause_toggle(icon, item):
         if paused.is_set():
             paused.clear()
-            item.text = "Pausar"
-            status_item.text = "Monitorando"
+            icon.menu = pystray.Menu(
+                pystray.MenuItem("Monitorando", None, enabled=False),
+                pystray.MenuItem("Pausar", on_pause_toggle),
+                pystray.MenuItem("Configurações", on_config),
+                pystray.MenuItem("Sair", on_quit)
+            )
         else:
             paused.set()
-            item.text = "Retomar"
-            status_item.text = "Pausado"
+            icon.menu = pystray.Menu(
+                pystray.MenuItem("Pausado", None, enabled=False),
+                pystray.MenuItem("Retomar", on_pause_toggle),
+                pystray.MenuItem("Configurações", on_config),
+                pystray.MenuItem("Sair", on_quit)
+            )
 
     def on_config(icon, item):
         watcher.stop()
@@ -42,16 +50,16 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
         watcher.stop()
         icon.stop()
 
-    status_item = pystray.MenuItem("Monitorando", None, enabled=False)
-    pause_item = pystray.MenuItem("Pausar", on_pause_toggle)
-    config_item = pystray.MenuItem("Configurações", on_config)
-    quit_item = pystray.MenuItem("Sair", on_quit)
-
     icon = pystray.Icon(
         "download_organizer",
         create_icon(),
         "Download Organizer",
-        menu=pystray.Menu(status_item, pause_item, config_item, quit_item)
+        menu=pystray.Menu(
+            pystray.MenuItem("Monitorando", None, enabled=False),
+            pystray.MenuItem("Pausar", on_pause_toggle),
+            pystray.MenuItem("Configurações", on_config),
+            pystray.MenuItem("Sair", on_quit)
+        )
     )
 
     icon.run()
