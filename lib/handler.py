@@ -79,4 +79,4 @@ class DownloadHandler(FileSystemEventHandler):
 
         logger.info(f"Processing {path.name} as {category}")
 
-        organize_download(path, destination)
+        organize_download(path, destination, self.config)
