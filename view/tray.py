@@ -24,7 +24,6 @@ class TrayIcon:
             "Download Organizer",
             menu=self._build_menu(is_paused=False),
         )
-        self._icon.on_activate = self._on_left_click
 
     def run(self) -> None:
         self._icon.run()
