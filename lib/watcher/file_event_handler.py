@@ -2,7 +2,7 @@ from pathlib import Path
 
 from watchdog.events import FileSystemEventHandler
 
-from lib.file_queue import FileQueue
+from lib.queue.file_queue import FileQueue
 
 
 class FileEventHandler(FileSystemEventHandler):

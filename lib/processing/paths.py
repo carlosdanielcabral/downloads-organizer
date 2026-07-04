@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from lib.config import Config
+from lib.config.config import Config
 
 
 def get_user_home() -> Path:

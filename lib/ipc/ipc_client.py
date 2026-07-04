@@ -1,7 +1,7 @@
 import logging
 import socket
 
-from lib.ipc_server import COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG, RESPONSE_OK
+from lib.ipc.ipc_server import COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG, RESPONSE_OK
 
 logger = logging.getLogger(__name__)
 

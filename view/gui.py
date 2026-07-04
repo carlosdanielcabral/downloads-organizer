@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from pathlib import Path
-from lib.config import Config
+from lib.config.config import Config
 from view.tabs.extensions_tab import ExtensionsTab
 from view.tabs.folders_tab import FoldersTab
 from view.tabs.monitoring_tab import MonitoringTab

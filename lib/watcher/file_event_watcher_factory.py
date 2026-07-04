@@ -1,13 +1,13 @@
 import threading
 from pathlib import Path
 
-from lib.config import Config
-from lib.delay_queue import DelayQueue
-from lib.file_event_handler import FileEventHandler
-from lib.file_event_watcher import FileEventWatcher
-from lib.file_processor import FileProcessor
-from lib.file_queue import FileQueue
-from lib.notifications import NotificationService
+from lib.config.config import Config
+from lib.queue.delay_queue import DelayQueue
+from lib.watcher.file_event_handler import FileEventHandler
+from lib.watcher.file_event_watcher import FileEventWatcher
+from lib.processing.file_processor import FileProcessor
+from lib.queue.file_queue import FileQueue
+from lib.notifications.notifications import NotificationService
 
 
 class FileEventWatcherFactory:

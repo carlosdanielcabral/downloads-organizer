@@ -5,10 +5,10 @@ from typing import Optional
 
 from watchdog.observers import Observer
 
-from lib.config import Config
-from lib.file_event_handler import FileEventHandler
-from lib.file_processor import FileProcessor
-from lib.file_queue import FileQueue
+from lib.config.config import Config
+from lib.watcher.file_event_handler import FileEventHandler
+from lib.processing.file_processor import FileProcessor
+from lib.queue.file_queue import FileQueue
 
 logger = logging.getLogger(__name__)
 

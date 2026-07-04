@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Callable
 
-from lib.delayed_task import DelayedTask
+from lib.queue.delayed_task import DelayedTask
 
 
 class DelayQueue:

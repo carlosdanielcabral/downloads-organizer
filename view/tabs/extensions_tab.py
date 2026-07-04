@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from lib.config import Config
+from lib.config.config import Config
 
 
 class ExtensionsTab(ctk.CTkFrame):

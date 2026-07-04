@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from pathlib import Path
-from lib.config import Config
+from lib.config.config import Config
 from view.widgets.file_picker import FilePicker
 
 

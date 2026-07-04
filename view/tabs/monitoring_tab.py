@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from lib.config import Config
-from lib.paths import get_downloads_folder
+from lib.config.config import Config
+from lib.processing.paths import get_downloads_folder
 from view.widgets.file_picker import FilePicker
 
 

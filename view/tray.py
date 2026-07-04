@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pystray
 
-from lib.file_event_watcher import FileEventWatcher
+from lib.watcher.file_event_watcher import FileEventWatcher
 from view.icon import create_icon
 
 
@@ -65,7 +65,7 @@ class TrayIcon:
         config_path = self._config_path
         ipc_port = self._ipc_port
 
-        subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config import Config; from lib.ipc_client import send_move_now, send_reload_config; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'), move_now_callback=lambda: send_move_now({ipc_port}), reload_config_callback=lambda: send_reload_config({ipc_port}))"])
+        subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config.config import Config; from lib.ipc.ipc_client import send_move_now, send_reload_config; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'), move_now_callback=lambda: send_move_now({ipc_port}), reload_config_callback=lambda: send_reload_config({ipc_port}))"])
 
     def _on_quit(self, icon, item):
         self._watcher.stop()

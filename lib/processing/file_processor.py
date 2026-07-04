@@ -1,12 +1,12 @@
 import logging
 from pathlib import Path
 
-from lib.config import Config
-from lib.delay_queue import DelayQueue
-from lib.mover import organize_download
-from lib.notifications import NotificationService
-from lib.paths import is_inside_downloads, resolve_destination
-from lib.rules import PARTIAL_EXTENSIONS, get_category
+from lib.config.config import Config
+from lib.queue.delay_queue import DelayQueue
+from lib.processing.mover import organize_download
+from lib.notifications.notifications import NotificationService
+from lib.processing.paths import is_inside_downloads, resolve_destination
+from lib.processing.rules import PARTIAL_EXTENSIONS, get_category
 
 logger = logging.getLogger(__name__)
 

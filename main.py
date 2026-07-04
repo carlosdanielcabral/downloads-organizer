@@ -1,11 +1,11 @@
 import logging
 from pathlib import Path
 
-from lib.config import Config
-from lib.file_event_watcher_factory import FileEventWatcherFactory
-from lib.ipc_server import IpcServer, COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG
-from lib.notifications import NotificationService
-from lib.paths import get_downloads_folder
+from lib.config.config import Config
+from lib.watcher.file_event_watcher_factory import FileEventWatcherFactory
+from lib.ipc.ipc_server import IpcServer, COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG
+from lib.notifications.notifications import NotificationService
+from lib.processing.paths import get_downloads_folder
 from view.tray import TrayIcon
 
 logging.basicConfig(

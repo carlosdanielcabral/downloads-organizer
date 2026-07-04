@@ -1,9 +1,9 @@
 import logging
 from pathlib import Path
 
-from lib.file_utils import move_path, resolve_unique_path, wait_until_unlocked
-from lib.notifications import NotificationService
-from lib.config import Config
+from lib.utils.file_utils import move_path, resolve_unique_path, wait_until_unlocked
+from lib.notifications.notifications import NotificationService
+from lib.config.config import Config
 
 logger = logging.getLogger(__name__)
 

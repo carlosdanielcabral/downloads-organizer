@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from lib.config import Config
+from lib.config.config import Config
 
 
 PARTIAL_EXTENSIONS = {".crdownload", ".part", ".tmp", ".download"}
