@@ -1,4 +1,5 @@
 import threading
+from datetime import datetime, timedelta
 from typing import Callable
 
 
@@ -13,6 +14,7 @@ class DelayedTask:
     def __init__(self, delay: float, on_execute: Callable[[], None]):
         self._on_execute = on_execute
         self._timer = threading.Timer(delay, on_execute)
+        self.scheduled_for: datetime = datetime.now() + timedelta(seconds=delay)
 
     def start(self) -> None:
         self._timer.start()

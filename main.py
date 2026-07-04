@@ -2,10 +2,10 @@ import logging
 from pathlib import Path
 
 from lib.config.config import Config
-from lib.watcher.file_event_watcher_factory import FileEventWatcherFactory
-from lib.ipc.ipc_server import IpcServer, COMMAND_MOVE_NOW, COMMAND_RELOAD_CONFIG
 from lib.notifications.notifications import NotificationService
 from lib.processing.paths import get_downloads_folder
+from lib.watcher.file_event_watcher_factory import FileEventWatcherFactory
+from view.gui_manager import GuiManager
 from view.tray import TrayIcon
 
 logging.basicConfig(
@@ -26,27 +26,26 @@ def main():
     watcher = FileEventWatcherFactory.create(downloads_folder, config, notification_service)
     watcher.start()
 
-    ipc_server = IpcServer()
-    ipc_server.register_handler(
-        COMMAND_MOVE_NOW,
-        lambda: watcher.move_pending_files()
-    )
-
     def reload_config():
         new_config = Config.load(config_path)
         watcher.update_config(new_config)
 
-    ipc_server.register_handler(COMMAND_RELOAD_CONFIG, reload_config)
-    ipc_server.start()
+    gui_manager = GuiManager(
+        watcher=watcher,
+        config=config,
+        config_path=config_path,
+        reload_config_callback=reload_config,
+    )
 
-    tray = TrayIcon(watcher, config_path, ipc_server.get_port())
+    gui_manager.open_window()
+
+    tray = TrayIcon(watcher=watcher, gui_manager=gui_manager)
 
     try:
         tray.run()
     except KeyboardInterrupt:
         watcher.stop()
     finally:
-        ipc_server.stop()
         notification_service.stop()
 
 

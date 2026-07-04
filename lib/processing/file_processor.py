@@ -42,6 +42,15 @@ class FileProcessor:
     def move_pending(self) -> None:
         self._delay_queue.execute_all_now()
 
+    def cancel(self, path: Path) -> None:
+        self._delay_queue.cancel(path)
+
+    def execute_now(self, path: Path) -> None:
+        self._delay_queue.execute_now(path)
+
+    def get_delay_queue(self):
+        return self._delay_queue
+
     def update_config(self, config: Config) -> None:
         self._config = config
 

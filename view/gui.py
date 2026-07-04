@@ -1,74 +1,100 @@
 import customtkinter as ctk
 from pathlib import Path
+from PIL import Image, ImageTk
+
 from lib.config.config import Config
+from lib.processing.file_processor import FileProcessor
 from view.tabs.extensions_tab import ExtensionsTab
 from view.tabs.folders_tab import FoldersTab
 from view.tabs.monitoring_tab import MonitoringTab
 
+WINDOW_TITLE = "Download Organizer"
+WINDOW_GEOMETRY = "900x700"
+ICON_PATH = Path(__file__).parent / "assets" / "icon.png"
+ICON_SIZE = (32, 32)
+
 
 class ConfigWindow(ctk.CTk):
-    def __init__(self, config: Config, config_path: Path, on_save_callback=None, move_now_callback=None, reload_config_callback=None):
+    """
+    Main configuration window for the Download Organizer application.
+
+    Hosts three tabs: Monitoramento (default), Pastas and Extensões.
+    Provides a footer with a single Salvar e Aplicar button that persists
+    the configuration and closes the window.
+
+    Unregisters the MonitoringTab queue observer when the window is closed
+    to prevent dangling callbacks from a destroyed widget.
+    """
+
+    def __init__(self, config: Config, config_path: Path, processor: FileProcessor, reload_config_callback=None):
         super().__init__()
-        
+
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
-        
-        self.config = config
-        self.config_path = config_path
-        self.on_save_callback = on_save_callback
-        self.move_now_callback = move_now_callback
-        self.reload_config_callback = reload_config_callback
-        
-        self.title("Download Organizer - Configurações")
-        self.geometry("900x700")
-        
-        self.setup_ui()
-    
-    def setup_ui(self):
-        self.tabview = ctk.CTkTabview(self)
-        self.tabview.pack(fill="both", expand=True, padx=10, pady=10)
-        
-        self.tabview.add("Pastas")
-        self.tabview.add("Monitoramento")
-        self.tabview.add("Extensões")
-        
-        self.folders_tab = FoldersTab(self.tabview.tab("Pastas"), self.config)
-        self.folders_tab.pack(fill="both", expand=True)
-        
-        self.monitoring_tab = MonitoringTab(self.tabview.tab("Monitoramento"), self.config)
-        self.monitoring_tab.pack(fill="both", expand=True)
-        
-        self.extensions_tab = ExtensionsTab(self.tabview.tab("Extensões"), self.config)
-        self.extensions_tab.pack(fill="both", expand=True)
-        
-        button_frame = ctk.CTkFrame(self)
-        button_frame.pack(pady=10, padx=10, fill="x")
-        
-        move_now_button = ctk.CTkButton(button_frame, text="Mover Arquivos Pendentes Agora", command=self.move_now, height=40)
-        move_now_button.pack(side="left", padx=5, pady=5, expand=True, fill="x")
-        
-        save_button = ctk.CTkButton(button_frame, text="Salvar e Aplicar", command=self.save_and_apply, height=40)
-        save_button.pack(side="left", padx=5, pady=5, expand=True, fill="x")
-    
-    def save_and_apply(self):
-        self.config.save(self.config_path)
 
-        if self.reload_config_callback:
-            self.reload_config_callback()
+        self._config = config
+        self._config_path = config_path
+        self._processor = processor
+        self._reload_config_callback = reload_config_callback
 
-        if self.on_save_callback:
-            self.on_save_callback()
+        self.title(WINDOW_TITLE)
+        self.geometry(WINDOW_GEOMETRY)
 
+        self._set_window_icon()
+        self._setup_ui()
+        self.protocol("WM_DELETE_WINDOW", self._on_close)
+
+    def _set_window_icon(self) -> None:
+        if not ICON_PATH.exists():
+            return
+
+        try:
+            pil_image = Image.open(ICON_PATH).resize(ICON_SIZE)
+            self._icon_photo = ImageTk.PhotoImage(pil_image)
+            self.iconphoto(True, self._icon_photo)
+        except Exception:
+            pass
+
+    def _setup_ui(self) -> None:
+        self._setup_tabs()
+        self._setup_footer()
+
+    def _setup_tabs(self) -> None:
+        self._tabview = ctk.CTkTabview(self)
+        self._tabview.pack(fill="both", expand=True, padx=10, pady=10)
+
+        self._tabview.add("Monitoramento")
+        self._tabview.add("Pastas")
+        self._tabview.add("Extensões")
+
+        self._monitoring_tab = MonitoringTab(
+            self._tabview.tab("Monitoramento"),
+            config=self._config,
+            processor=self._processor,
+        )
+        self._monitoring_tab.pack(fill="both", expand=True)
+
+        self._folders_tab = FoldersTab(self._tabview.tab("Pastas"), self._config)
+        self._folders_tab.pack(fill="both", expand=True)
+
+        self._extensions_tab = ExtensionsTab(self._tabview.tab("Extensões"), self._config)
+        self._extensions_tab.pack(fill="both", expand=True)
+
+    def _setup_footer(self) -> None:
+        footer_frame = ctk.CTkFrame(self)
+        footer_frame.pack(pady=10, padx=10, fill="x")
+
+        save_button = ctk.CTkButton(footer_frame, text="Salvar e Aplicar", command=self._on_save_and_apply, height=40)
+        save_button.pack(padx=5, pady=5, fill="x")
+
+    def _on_save_and_apply(self) -> None:
+        self._config.save(self._config_path)
+
+        if self._reload_config_callback:
+            self._reload_config_callback()
+
+        self._on_close()
+
+    def _on_close(self) -> None:
+        self._monitoring_tab.unregister_observer()
         self.destroy()
-
-    def move_now(self):
-        if self.move_now_callback:
-            self.move_now_callback()
-
-
-def show_config_window(config: Config, config_path: Path, on_save_callback=None, move_now_callback=None, reload_config_callback=None):
-    app = ConfigWindow(config, config_path, on_save_callback, move_now_callback, reload_config_callback)
-    app.mainloop()
-    
-    if on_save_callback:
-        on_save_callback()

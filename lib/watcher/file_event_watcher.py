@@ -6,9 +6,9 @@ from typing import Optional
 from watchdog.observers import Observer
 
 from lib.config.config import Config
-from lib.watcher.file_event_handler import FileEventHandler
 from lib.processing.file_processor import FileProcessor
 from lib.queue.file_queue import FileQueue
+from lib.watcher.file_event_handler import FileEventHandler
 
 logger = logging.getLogger(__name__)
 
@@ -70,6 +70,9 @@ class FileEventWatcher:
 
     def move_pending_files(self) -> None:
         self._processor.move_pending()
+
+    def get_processor(self) -> "FileProcessor":
+        return self._processor
 
     def update_config(self, config: Config) -> None:
         self._processor.update_config(config)
