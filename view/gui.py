@@ -7,7 +7,7 @@ from view.tabs.monitoring_tab import MonitoringTab
 
 
 class ConfigWindow(ctk.CTk):
-    def __init__(self, config: Config, config_path: Path, on_save_callback=None, move_now_callback=None):
+    def __init__(self, config: Config, config_path: Path, on_save_callback=None, move_now_callback=None, reload_config_callback=None):
         super().__init__()
         
         ctk.set_appearance_mode("dark")
@@ -17,6 +17,7 @@ class ConfigWindow(ctk.CTk):
         self.config_path = config_path
         self.on_save_callback = on_save_callback
         self.move_now_callback = move_now_callback
+        self.reload_config_callback = reload_config_callback
         
         self.title("Download Organizer - Configurações")
         self.geometry("900x700")
@@ -51,10 +52,13 @@ class ConfigWindow(ctk.CTk):
     
     def save_and_apply(self):
         self.config.save(self.config_path)
-        
+
+        if self.reload_config_callback:
+            self.reload_config_callback()
+
         if self.on_save_callback:
             self.on_save_callback()
-        
+
         self.destroy()
 
     def move_now(self):
@@ -62,8 +66,8 @@ class ConfigWindow(ctk.CTk):
             self.move_now_callback()
 
 
-def show_config_window(config: Config, config_path: Path, on_save_callback=None, move_now_callback=None):
-    app = ConfigWindow(config, config_path, on_save_callback, move_now_callback)
+def show_config_window(config: Config, config_path: Path, on_save_callback=None, move_now_callback=None, reload_config_callback=None):
+    app = ConfigWindow(config, config_path, on_save_callback, move_now_callback, reload_config_callback)
     app.mainloop()
     
     if on_save_callback:
