@@ -6,19 +6,21 @@ from typing import Optional
 from watchdog.observers import Observer
 
 from lib.handler import DownloadHandler
+from lib.config import Config
 
 logger = logging.getLogger(__name__)
 
 
 class DownloadWatcher:
-    def __init__(self, watch_path: Path, paused_event: threading.Event):
+    def __init__(self, watch_path: Path, paused_event: threading.Event, config: Config):
         self.watch_path = watch_path
         self.paused_event = paused_event
+        self.config = config
         self.observer: Optional[Observer] = None
 
     def start(self):
         self.observer = Observer()
-        handler = DownloadHandler(self.paused_event)
+        handler = DownloadHandler(self.paused_event, self.config)
         self.observer.schedule(handler, str(self.watch_path), recursive=False)
         self.observer.start()
 

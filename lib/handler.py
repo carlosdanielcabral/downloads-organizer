@@ -7,14 +7,16 @@ from watchdog.events import FileSystemEventHandler
 from lib.mover import organize_download
 from lib.paths import is_inside_downloads, resolve_destination
 from lib.rules import PARTIAL_EXTENSIONS, get_category
+from lib.config import Config
 
 logger = logging.getLogger(__name__)
 
 
 class DownloadHandler(FileSystemEventHandler):
-    def __init__(self, paused_event: threading.Event):
+    def __init__(self, paused_event: threading.Event, config: Config):
         super().__init__()
         self.paused_event = paused_event
+        self.config = config
         self._debounce_timers: dict[str, threading.Timer] = {}
 
     def on_created(self, event):
@@ -72,9 +74,9 @@ class DownloadHandler(FileSystemEventHandler):
         if not path.exists():
             return
 
-        category = get_category(path)
-        destination = resolve_destination(category)
+        category = get_category(path, self.config)
+        destination = resolve_destination(category, self.config)
 
-        logger.info(f"Processing {path.name} as {category.value}")
+        logger.info(f"Processing {path.name} as {category}")
 
         organize_download(path, destination)
