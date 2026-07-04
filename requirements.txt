@@ -2,4 +2,4 @@ watchdog>=4.0
 pystray>=0.19
 Pillow>=10.0
 customtkinter>=5.0
-win10toast>=0.9
+plyer>=2.1
