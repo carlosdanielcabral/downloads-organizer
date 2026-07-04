@@ -1,9 +1,11 @@
 import threading
+from pathlib import Path
 from PIL import Image, ImageDraw
 
 import pystray
 
 from lib.watcher import DownloadWatcher
+from lib.config import Config
 
 
 def create_icon() -> Image.Image:
@@ -16,7 +18,7 @@ def create_icon() -> Image.Image:
     return image
 
 
-def run_tray(watcher: DownloadWatcher, paused: threading.Event) -> None:
+def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, config_path: Path) -> None:
     def on_pause_toggle(icon, item):
         if paused.is_set():
             paused.clear()
