@@ -60,3 +60,6 @@ class MonitoringTab(ctk.CTkFrame):
 
         self._settings_section = SettingsSection(self, config=config)
         self._settings_section.pack(fill="x", padx=20, pady=(5, 10))
+
+        spacer = ctk.CTkFrame(self, fg_color="transparent")
+        spacer.pack(fill="both", expand=True)

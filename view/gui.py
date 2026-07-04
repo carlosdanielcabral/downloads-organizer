@@ -58,8 +58,8 @@ class ConfigWindow(ctk.CTkToplevel):
             pass
 
     def _setup_ui(self) -> None:
-        self._setup_tabs()
         self._setup_footer()
+        self._setup_tabs()
 
     def _setup_tabs(self) -> None:
         self._tabview = ctk.CTkTabview(self)
@@ -85,7 +85,7 @@ class ConfigWindow(ctk.CTkToplevel):
 
     def _setup_footer(self) -> None:
         footer_frame = ctk.CTkFrame(self)
-        footer_frame.pack(pady=10, padx=10, fill="x")
+        footer_frame.pack(side="bottom", pady=10, padx=10, fill="x")
 
         save_button = ctk.CTkButton(footer_frame, text="Salvar e Aplicar", command=self._on_save_and_apply, height=40)
         save_button.pack(padx=5, pady=5, fill="x")

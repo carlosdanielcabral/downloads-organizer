@@ -3,15 +3,19 @@ import customtkinter as ctk
 from lib.history.move_history import MoveHistory
 
 MOVED_AT_FORMAT = "%d/%m/%Y %H:%M"
+ROW_HEIGHT = 30
+EMPTY_STATE_HEIGHT = 36
+MAX_HEIGHT = 200
 
 
 class HistorySection(ctk.CTkFrame):
     """
     Displays the list of successfully moved files in a scrollable frame.
 
-    Reacts to new history entries via the Observer pattern: registers
-    itself on MoveHistory and schedules thread-safe UI refreshes via
-    tkinter's after(0, ...).
+    The frame height grows with the number of entries up to MAX_HEIGHT,
+    after which it becomes scrollable. Reacts to new history entries via
+    the Observer pattern: registers itself on MoveHistory and schedules
+    thread-safe UI refreshes via tkinter's after(0, ...).
     """
 
     def __init__(self, master, move_history: MoveHistory, **kwargs):
@@ -32,28 +36,33 @@ class HistorySection(ctk.CTkFrame):
         self.after(0, self._refresh)
 
     def _setup_ui(self) -> None:
-        self._scrollable_frame = ctk.CTkScrollableFrame(self, height=150)
-        self._scrollable_frame.pack(fill="x", padx=10, pady=(10, 10))
+        self._rows_frame = ctk.CTkFrame(self, height=EMPTY_STATE_HEIGHT)
+        self._rows_frame.pack(fill="x", padx=10, pady=(10, 10))
+        self._rows_frame.pack_propagate(False)
 
         self._refresh()
 
     def _refresh(self) -> None:
-        for widget in self._scrollable_frame.winfo_children():
+        for widget in self._rows_frame.winfo_children():
             widget.destroy()
 
         entries = self._move_history.get_all()
 
         if not entries:
+            self._rows_frame.configure(height=EMPTY_STATE_HEIGHT)
             self._render_empty_state()
 
             return
+
+        desired_height = min(len(entries) * ROW_HEIGHT, MAX_HEIGHT)
+        self._rows_frame.configure(height=desired_height)
 
         for entry in entries:
             self._render_history_row(entry)
 
     def _render_empty_state(self) -> None:
         empty_label = ctk.CTkLabel(
-            self._scrollable_frame,
+            self._rows_frame,
             text="Nenhum arquivo movido ainda.",
             font=("Arial", 11),
             text_color="gray",
@@ -65,7 +74,7 @@ class HistorySection(ctk.CTkFrame):
         text = f"{entry.source_name}  →  {entry.destination}  —  {moved_at}"
 
         row_label = ctk.CTkLabel(
-            self._scrollable_frame,
+            self._rows_frame,
             text=text,
             font=("Arial", 11),
             anchor="w",
