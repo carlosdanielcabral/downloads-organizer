@@ -41,14 +41,6 @@ O aplicativo possui uma interface gráfica para personalizar as regras de organi
 2. Selecione "Configurações"
 3. A janela de configurações será aberta
 
-### Aba Extensões
-
-Visualize e edite o mapeamento de extensões para categorias:
-- Lista scrollable mostrando todas as extensões configuradas
-- Edite a categoria diretamente no campo de texto
-- Remova extensões com o botão "X"
-- As alterações são salvas ao clicar em "Salvar e Aplicar"
-
 ### Aba Pastas
 
 Personalize as pastas de destino para cada categoria:
@@ -66,6 +58,14 @@ Selecione a pasta que deseja monitorar para novos downloads:
 - Campo de texto com a pasta atual
 - Botão "..." para selecionar pasta via file dialog
 - Por padrão, monitora `%USERPROFILE%\Downloads`
+
+### Aba Extensões
+
+Visualize e edite o mapeamento de extensões para categorias:
+- Lista scrollable mostrando todas as extensões configuradas
+- Selecione a categoria através de dropdown (IMAGES, VIDEOS, AUDIO, DOCUMENTS, OTHER)
+- Remova extensões com o botão "X"
+- As alterações são salvas ao clicar em "Salvar e Aplicar"
 
 ### Salvar e Aplicar
 
