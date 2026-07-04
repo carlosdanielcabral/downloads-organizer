@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 from lib.config.config import Config
@@ -47,6 +48,7 @@ def main():
         watcher.stop()
     finally:
         notification_service.stop()
+        os._exit(0)
 
 
 if __name__ == "__main__":
