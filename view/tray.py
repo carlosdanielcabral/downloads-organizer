@@ -27,6 +27,7 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
             icon.menu = pystray.Menu(
                 pystray.MenuItem("Monitorando", None, enabled=False),
                 pystray.MenuItem("Pausar", on_pause_toggle),
+                pystray.MenuItem("Mover Agora", on_move_now),
                 pystray.MenuItem("Configurações", on_config),
                 pystray.MenuItem("Sair", on_quit)
             )
@@ -35,14 +36,18 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
             icon.menu = pystray.Menu(
                 pystray.MenuItem("Pausado", None, enabled=False),
                 pystray.MenuItem("Retomar", on_pause_toggle),
+                pystray.MenuItem("Mover Agora", on_move_now),
                 pystray.MenuItem("Configurações", on_config),
                 pystray.MenuItem("Sair", on_quit)
             )
 
+    def on_move_now(icon, item):
+        watcher.handler.move_pending_files()
+
     def on_config(icon, item):
         watcher.stop()
         
-        subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config import Config; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'))"])
+        subprocess.Popen([sys.executable, "-c", f"from view.gui import show_config_window; from lib.config import Config; from pathlib import Path; config = Config.load(Path(r'{config_path}')); show_config_window(config, Path(r'{config_path}'), move_now_callback=lambda: watcher.handler.move_pending_files())"])
         
         watcher.start()
 
@@ -57,6 +62,7 @@ def run_tray(watcher: DownloadWatcher, paused: threading.Event, config: Config, 
         menu=pystray.Menu(
             pystray.MenuItem("Monitorando", None, enabled=False),
             pystray.MenuItem("Pausar", on_pause_toggle),
+            pystray.MenuItem("Mover Agora", on_move_now),
             pystray.MenuItem("Configurações", on_config),
             pystray.MenuItem("Sair", on_quit)
         )

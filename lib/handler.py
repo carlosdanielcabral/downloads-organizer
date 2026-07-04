@@ -106,3 +106,11 @@ class DownloadHandler(FileSystemEventHandler):
         logger.info(f"Processing {path.name} as {category}")
 
         organize_download(path, destination, self.config)
+
+    def move_pending_files(self):
+        for file_key, timer in list(self._delay_timers.items()):
+            timer.cancel()
+            path = Path(file_key)
+            self._move_file(path)
+        
+        logger.info(f"Moved all pending files")

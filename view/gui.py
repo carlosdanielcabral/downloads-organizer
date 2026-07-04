@@ -7,7 +7,7 @@ from view.tabs.monitoring_tab import MonitoringTab
 
 
 class ConfigWindow(ctk.CTk):
-    def __init__(self, config: Config, config_path: Path, on_save_callback=None):
+    def __init__(self, config: Config, config_path: Path, on_save_callback=None, move_now_callback=None):
         super().__init__()
         
         ctk.set_appearance_mode("dark")
@@ -16,6 +16,7 @@ class ConfigWindow(ctk.CTk):
         self.config = config
         self.config_path = config_path
         self.on_save_callback = on_save_callback
+        self.move_now_callback = move_now_callback
         
         self.title("Download Organizer - Configurações")
         self.geometry("900x700")
@@ -39,8 +40,14 @@ class ConfigWindow(ctk.CTk):
         self.extensions_tab = ExtensionsTab(self.tabview.tab("Extensões"), self.config)
         self.extensions_tab.pack(fill="both", expand=True)
         
-        save_button = ctk.CTkButton(self, text="Salvar e Aplicar", command=self.save_and_apply, height=40)
-        save_button.pack(pady=10, padx=10, fill="x")
+        button_frame = ctk.CTkFrame(self)
+        button_frame.pack(pady=10, padx=10, fill="x")
+        
+        move_now_button = ctk.CTkButton(button_frame, text="Mover Arquivos Pendentes Agora", command=self.move_now, height=40)
+        move_now_button.pack(side="left", padx=5, pady=5, expand=True, fill="x")
+        
+        save_button = ctk.CTkButton(button_frame, text="Salvar e Aplicar", command=self.save_and_apply, height=40)
+        save_button.pack(side="left", padx=5, pady=5, expand=True, fill="x")
     
     def save_and_apply(self):
         self.config.save(self.config_path)
@@ -50,9 +57,13 @@ class ConfigWindow(ctk.CTk):
         
         self.destroy()
 
+    def move_now(self):
+        if self.move_now_callback:
+            self.move_now_callback()
 
-def show_config_window(config: Config, config_path: Path, on_save_callback=None):
-    app = ConfigWindow(config, config_path, on_save_callback)
+
+def show_config_window(config: Config, config_path: Path, on_save_callback=None, move_now_callback=None):
+    app = ConfigWindow(config, config_path, on_save_callback, move_now_callback)
     app.mainloop()
     
     if on_save_callback:
