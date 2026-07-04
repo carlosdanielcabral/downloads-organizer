@@ -10,6 +10,7 @@ Aplicativo Python em background que monitora a pasta Downloads do Windows, detec
 - Edição de mapeamento extensão → categoria
 - Edição de mapeamento categoria → pasta
 - Seleção da pasta monitorada
+- **Notificações toast** ao organizar arquivos (opcional)
 - Bandeja do sistema com controles de pausar/retomar e configurações
 - Tratamento de downloads incompletos (`.crdownload`, `.part`, `.tmp`, `.download`)
 - Resolução automática de conflitos de nomes (arquivos duplicados)
@@ -58,6 +59,7 @@ Selecione a pasta que deseja monitorar para novos downloads:
 - Campo de texto com a pasta atual
 - Botão "..." para selecionar pasta via file dialog
 - Por padrão, monitora `%USERPROFILE%\Downloads`
+- Checkbox para habilitar/desabilitar notificações toast ao organizar arquivos
 
 ### Aba Extensões
 
@@ -103,6 +105,8 @@ As configurações são salvas em `config.json` na raiz do projeto. Você pode e
 - Tratamento de arquivos bloqueados por outros processos (até 15 tentativas com 2s de intervalo)
 - Monitora apenas novos arquivos (eventos `on_created` e `on_moved`)
 - Configurações persistem em JSON para fácil edição manual
+- Notificações toast usam win10toast para Windows 10/11
+- Clicar na notificação abre a pasta de destino do arquivo
 
 ## Estrutura do Projeto
 
@@ -114,6 +118,7 @@ download-organizer/
 │   ├── paths.py             # Categoria → pasta destino
 │   ├── file_utils.py        # Operações genéricas de filesystem
 │   ├── mover.py             # Orquestração da organização
+│   ├── notifications.py     # Notificações toast
 │   ├── handler.py           # Handler de eventos do watchdog
 │   └── watcher.py           # Monitoramento da pasta
 ├── view/                     # Interface gráfica
