@@ -91,7 +91,7 @@ class ConfigWindow(ctk.CTkToplevel):
         save_button = ctk.CTkButton(footer_frame, text="Salvar e Aplicar", command=self._on_save_and_apply, height=40)
         save_button.pack(side="left", padx=(5, 5), pady=5, expand=True, fill="x")
 
-        quit_button = ctk.CTkButton(footer_frame, text="Sair", command=self._on_quit, height=40, fg_color="#c0392b", hover_color="#96281b", width=100)
+        quit_button = ctk.CTkButton(footer_frame, text="Parar", command=self._on_quit, height=40, fg_color="#c0392b", hover_color="#96281b", width=100)
         quit_button.pack(side="right", padx=(0, 5), pady=5)
 
     def _on_save_and_apply(self) -> None:
@@ -103,8 +103,6 @@ class ConfigWindow(ctk.CTkToplevel):
         self._on_close()
 
     def _on_quit(self) -> None:
-        self._on_close()
-
         if self._quit_callback:
             self._quit_callback()
 
