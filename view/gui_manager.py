@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 
 from lib.config.config import Config
+from lib.history.move_history import MoveHistory
 from lib.watcher.file_event_watcher import FileEventWatcher
 
 logger = logging.getLogger(__name__)
@@ -18,11 +19,12 @@ class GuiManager:
     tkinter thread via after().
     """
 
-    def __init__(self, watcher: FileEventWatcher, config: Config, config_path: Path, reload_config_callback=None):
+    def __init__(self, watcher: FileEventWatcher, config: Config, config_path: Path, reload_config_callback=None, move_history: MoveHistory = None):
         self._watcher = watcher
         self._config = config
         self._config_path = config_path
         self._reload_config_callback = reload_config_callback
+        self._move_history = move_history
         self._window = None
         self._root = None
         self._ready = threading.Event()
@@ -70,4 +72,5 @@ class GuiManager:
             config_path=self._config_path,
             processor=processor,
             reload_config_callback=self._reload_config_callback,
+            move_history=self._move_history,
         )

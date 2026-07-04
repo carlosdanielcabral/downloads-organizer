@@ -3,6 +3,7 @@ from pathlib import Path
 from PIL import Image, ImageTk
 
 from lib.config.config import Config
+from lib.history.move_history import MoveHistory
 from lib.processing.file_processor import FileProcessor
 from view.tabs.extensions.extensions_tab import ExtensionsTab
 from view.tabs.folders.folders_tab import FoldersTab
@@ -26,7 +27,7 @@ class ConfigWindow(ctk.CTkToplevel):
     to prevent dangling callbacks from a destroyed widget.
     """
 
-    def __init__(self, config: Config, config_path: Path, processor: FileProcessor, reload_config_callback=None):
+    def __init__(self, config: Config, config_path: Path, processor: FileProcessor, reload_config_callback=None, move_history: MoveHistory = None):
         super().__init__()
 
         self.lift()
@@ -36,6 +37,7 @@ class ConfigWindow(ctk.CTkToplevel):
         self._config_path = config_path
         self._processor = processor
         self._reload_config_callback = reload_config_callback
+        self._move_history = move_history
 
         self.title(WINDOW_TITLE)
         self.geometry(WINDOW_GEOMETRY)
@@ -71,6 +73,7 @@ class ConfigWindow(ctk.CTkToplevel):
             self._tabview.tab("Monitoramento"),
             config=self._config,
             processor=self._processor,
+            move_history=self._move_history,
         )
         self._monitoring_tab.pack(fill="both", expand=True)
 

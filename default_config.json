@@ -54,5 +54,6 @@
   },
   "watch_folder": null,
   "enable_notifications": true,
-  "delay_minutes": 30
+  "delay_minutes": 30,
+  "history_retention_days": 30
 }
