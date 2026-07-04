@@ -14,7 +14,7 @@ ICON_PATH = Path(__file__).parent / "assets" / "icon.png"
 ICON_SIZE = (32, 32)
 
 
-class ConfigWindow(ctk.CTk):
+class ConfigWindow(ctk.CTkToplevel):
     """
     Main configuration window for the Download Organizer application.
 
@@ -29,8 +29,8 @@ class ConfigWindow(ctk.CTk):
     def __init__(self, config: Config, config_path: Path, processor: FileProcessor, reload_config_callback=None):
         super().__init__()
 
-        ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("blue")
+        self.lift()
+        self.focus_force()
 
         self._config = config
         self._config_path = config_path
