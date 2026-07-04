@@ -46,6 +46,23 @@ class MonitoringTab(ctk.CTkFrame):
             command=on_notifications_toggle
         )
         self.notifications_checkbox.pack(anchor="w", padx=5, pady=5)
+        
+        delay_frame = ctk.CTkFrame(frame)
+        delay_frame.pack(fill="x", padx=5, pady=10)
+        
+        delay_label = ctk.CTkLabel(delay_frame, text="Delay antes de mover (minutos):", font=("Arial", 12))
+        delay_label.pack(anchor="w", padx=5, pady=5)
+        
+        def on_delay_change(value):
+            try:
+                minutes = int(float(value))
+                self.config.set_delay_minutes(minutes)
+            except ValueError:
+                pass
+        
+        self.delay_entry = ctk.CTkEntry(delay_frame, width=100)
+        self.delay_entry.pack(anchor="w", padx=5, pady=5)
+        self.delay_entry.bind("<KeyRelease>", lambda e: on_delay_change(e.widget.get()))
     
     def load_monitoring_settings(self):
         current_path = self.config.get_watch_folder()
@@ -54,3 +71,5 @@ class MonitoringTab(ctk.CTkFrame):
             self.file_picker.set_path(current_path)
         
         self.notifications_checkbox.set(self.config.get_enable_notifications())
+        self.delay_entry.delete(0, "end")
+        self.delay_entry.insert(0, str(self.config.get_delay_minutes()))
