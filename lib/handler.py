@@ -18,6 +18,7 @@ class DownloadHandler(FileSystemEventHandler):
         self.paused_event = paused_event
         self.config = config
         self._debounce_timers: dict[str, threading.Timer] = {}
+        self._delay_timers: dict[str, threading.Timer] = {}
 
     def on_created(self, event):
         if event.is_directory:
@@ -72,6 +73,31 @@ class DownloadHandler(FileSystemEventHandler):
             return
 
         if not path.exists():
+            return
+
+        delay_minutes = self.config.get_delay_minutes()
+        delay_seconds = delay_minutes * 60
+
+        if delay_seconds > 0:
+            if file_key in self._delay_timers:
+                self._delay_timers[file_key].cancel()
+
+            self._delay_timers[file_key] = threading.Timer(
+                delay_seconds,
+                lambda: self._move_file(path)
+            )
+            self._delay_timers[file_key].start()
+
+            logger.info(f"Scheduled move for {path.name} in {delay_minutes} minutes")
+        else:
+            self._move_file(path)
+
+    def _move_file(self, path: Path):
+        file_key = str(path)
+        self._delay_timers.pop(file_key, None)
+
+        if not path.exists():
+            logger.debug(f"File no longer exists: {path}")
             return
 
         category = get_category(path, self.config)
